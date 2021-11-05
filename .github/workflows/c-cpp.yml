@@ -15,6 +15,9 @@ jobs:
     - uses: actions/checkout@v2
     #- name: configure
     #  run: ./configure
+    
+    - name: install sdl2
+      run: apt-get install libsdl2-dev
     - name: make clean
       run: make clean
     - name: make all
