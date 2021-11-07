@@ -245,6 +245,7 @@ bool world_sim_puede_moverse(state_t *state, short sustancia, int x, int y){
       else if (state->board[x][y] == SAND){ return false;}
       else if (state->board[x][y] == WATER){ return true;}
       else if (state->board[x][y] == ROCK){ return false;}
+      else if (state->board[x][y] == ROCK){ return true;}
       else
       {
         return false;
@@ -268,6 +269,7 @@ bool world_sim_puede_moverse(state_t *state, short sustancia, int x, int y){
       else if (state->board[x][y] == SAND){ return false;}
       else if (state->board[x][y] == WATER){ return true;}
       else if (state->board[x][y] == ROCK){ return false;}
+      else if (state->board[x][y] == ROCK){ return true;}
       else
       {
         return false;
@@ -279,7 +281,12 @@ bool world_sim_puede_moverse(state_t *state, short sustancia, int x, int y){
       break;
 
     case FIRE:
-      if(state->board[x][y] == FIRE){ return true;}
+      if(state->board[x][y] == AIR){ return true;} 
+      else if (state->board[x][y] == SAND){ return false;}
+      else if (state->board[x][y] == WATER){ return true;}
+      else if (state->board[x][y] == ROCK){ return false;}
+      else if (state->board[x][y] == FIRE){ return false;}
+      else if (state->board[x][y] == OIL){ return true;}
       break;
 
     case OIL:
@@ -320,6 +327,31 @@ void water_sim_mover(state_t *state, bool *flag1, bool *flag2, int fromX, int fr
     state->board[toX][toY] = WATER;
     *flag1 = true;
     *flag2 = true;
+}
+
+void fire_sim_mover(state_t *state, bool *flag1, bool *flag2, int fromX, int fromY, int toX, int toY){
+    short otraSustancia = state->board[toX][toY];
+    if (otraSustancia== WATER)
+    {
+      state->board[fromX][fromY] = AIR;
+      state->board[toX][toY] = WATER;
+      *flag1 = true;
+      *flag2 = true;
+    } else if (otraSustancia== OIL)
+    {
+      state->board[fromX][fromY] = FIRE;
+      state->board[toX][toY] = FIRE;
+      *flag1 = true;
+      *flag2 = true;
+    }     
+    else
+    {
+      state->board[fromX][fromY] = AIR;
+      state->board[toX][toY] = otraSustancia;
+      *flag1 = true;
+      *flag2 = true;
+    }
+   
 }
 
 //* world_sand_sim() RUNS THE SIMULATION logic for all elements of the world
@@ -410,6 +442,28 @@ void world_sand_sim(SDL_Renderer *renderer, state_t *state)
                               water_sim_mover(state, &seHaMovidoFlags[x][y],&seHaMovidoFlags[x+2][y + 1], x, y, x+2, y + 1);
                           } else if(world_sim_puede_moverse(state, WATER, x + 1, y)){ //Mover a la derecha
                             water_sim_mover(state, &seHaMovidoFlags[x][y],&seHaMovidoFlags[x+1][y], x, y, x+1, y);
+                          } 
+                      }
+                    } 
+                        
+                }
+
+                //*g rules and functions for fire
+                if(state->board[x][y] == FIRE){
+                    if(world_sim_puede_moverse(state, FIRE, x, y + 1)){ //Mover abajo
+                        fire_sim_mover(state, &seHaMovidoFlags[x][y],&seHaMovidoFlags[x][y+1], x, y, x, y + 1);
+                    } else { 
+                    
+                    //random number to define if it should go lest or right
+                      bool primeroIzquierda = drand48() < 0.5;
+
+                      if(primeroIzquierda){
+                          if(world_sim_puede_moverse(state, FIRE, x - 1, y + 1)){ //Mover a la izquierda
+                              fire_sim_mover(state, &seHaMovidoFlags[x][y],&seHaMovidoFlags[x-1][y+1], x, y, x-1, y+1);
+                          } 
+                      } else {
+                         if(world_sim_puede_moverse(state, FIRE, x + 1, y + 1)){ //Mover a la derecha
+                              fire_sim_mover(state, &seHaMovidoFlags[x][y],&seHaMovidoFlags[x+1][y+1], x, y, x+1, y+1);
                           } 
                       }
                     } 
