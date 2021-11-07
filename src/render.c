@@ -59,6 +59,15 @@ void render_grid(SDL_Renderer *renderer, const state_t *state)
                     SDL_SetRenderDrawColor(renderer, YELLOW_CELL_COLOR.r, YELLOW_CELL_COLOR.g, YELLOW_CELL_COLOR.b, 255);
                     SDL_RenderFillRect(renderer, &rect);
                     break;
+                case WHITEBLUE:
+                SDL_SetRenderDrawColor(renderer, WHITEBLUE_CELL_COLOR.r, WHITEBLUE_CELL_COLOR.g, WHITEBLUE_CELL_COLOR.b, 255);
+                SDL_RenderFillRect(renderer, &rect);
+                    break;
+                  case GREEN:
+                SDL_SetRenderDrawColor(renderer, GREEN_CELL_COLOR.r, GREEN_CELL_COLOR.g, GREEN_CELL_COLOR.b, 255);
+                SDL_RenderFillRect(renderer, &rect);
+                    break;
+                   
                 case PURPLE:
                     SDL_SetRenderDrawColor(renderer, PURPLE_CELL_COLOR.r, PURPLE_CELL_COLOR.g, PURPLE_CELL_COLOR.b, 255);
                     SDL_RenderFillRect(renderer, &rect);
@@ -222,6 +231,9 @@ void wireworld(SDL_Renderer *renderer, state_t *state)
                 state->board[x][y] = new_board[x][y];
     }
 }
+
+////////////////////////////////////////////////////////////////////////////////!!
+//SAND SIMULATION FUNCTIONS
 
 bool sand_sim_puede_moverse(state_t *state, short sustancia, int x, int y){
     if(x < 0 || x >= N || y < 0 || y >= N){ return false;}

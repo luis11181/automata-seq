@@ -106,13 +106,21 @@ int main(int argc, char **argv)
             break;
 
         case FALLING_SAND_SIM:
-            for (int x = 0; x < N; x++)
-                for (int y = 0; y < N-5; y++)
-                    state.board[x][y] = WHITEBLUE;
-
-            for (int x = 0; x < N; x++)
-                for (int y = N-3; y < N; y++)
-                    state.board[x][y] = GRAY;               
+            for (int x = 0; x < N; x++){
+                for (int y = 0; y < N; y++){
+              
+                    //make rock is the sum is small
+                    if (x+y < N/10) {
+                        state.board[x][y] = ROCK;
+                    } else if (x+y < N/5) { //make the sea
+                        state.board[x][y] = BLUE;
+                    } else if (x+y < N/3) { //make sand
+                        state.board[x][y] = YELLOW;
+                    } else { //everithing else is air
+                        state.board[x][y] = BLACK;
+                    }
+                }
+            }       
             break;
 
         default:
