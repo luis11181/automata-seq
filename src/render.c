@@ -63,7 +63,7 @@ void render_grid(SDL_Renderer *renderer, const state_t *state)
                 SDL_SetRenderDrawColor(renderer, WHITEBLUE_CELL_COLOR.r, WHITEBLUE_CELL_COLOR.g, WHITEBLUE_CELL_COLOR.b, 255);
                 SDL_RenderFillRect(renderer, &rect);
                     break;
-                  case GREEN:
+                case GREEN:
                 SDL_SetRenderDrawColor(renderer, GREEN_CELL_COLOR.r, GREEN_CELL_COLOR.g, GREEN_CELL_COLOR.b, 255);
                 SDL_RenderFillRect(renderer, &rect);
                     break;
