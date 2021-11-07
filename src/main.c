@@ -182,9 +182,10 @@ int main(int argc, char **argv)
                         SDL_SetWindowTitle(window, state.mode ? paused_title : running_title);
                     }  //*makes a meteorite effect if m or M are pressed 
                     else if (event.key.keysym.sym == 'm' || event.key.keysym.sym == 'M') {
-                        for (int x = 0; x < N/4; x++)
+                      int random = rand() % 9;
+                        for (int x = N/10*random; x < N/10*random +1; x++)
                             for (int y = 0; y < N/20; y++)
-                                state.board[x][y] = (rand() % 2) ? ROCK : AIR;
+                                state.board[x][y] = (rand() % 2) ? ROCK : FIRE;
                     }                                            
                     break;
             }
