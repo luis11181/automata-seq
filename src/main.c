@@ -126,7 +126,7 @@ int main(int argc, char **argv)
             state.board[N-1][N-1] = FIRE;
             state.board[N-3][N-3] = FIRE;
             state.board[N-5][N-5] = FIRE;
-            // print the matrix state,board in the console 
+            // print the matrix state,board in the console to test
             for (int x = 0; x < N; x++){
                 for (int y = 0; y < N; y++){
                     printf("%d", state.board[x][y]);
@@ -187,7 +187,7 @@ int main(int argc, char **argv)
                     }  //makes a meteoride if m or M are pressed 
                     else if (event.key.keysym.sym == 'm' || event.key.keysym.sym == 'M') {
                         for (int x = 0; x < N; x++)
-                            for (int y = N-N/10; y < N; y++)
+                            for (int y = 0; y < N/10; y++)
                                 state.board[x][y] = (rand() % 2) ? SAND : AIR;
                     }                                            
                     break;

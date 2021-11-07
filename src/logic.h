@@ -24,7 +24,7 @@ enum MODE {
 };
 
 enum CELL {
-    BLACK,
+    BLACK,//0
     WHITE,
     BLUE,
     RED,
