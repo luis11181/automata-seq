@@ -110,9 +110,9 @@ int main(int argc, char **argv)
                 for (int y = 0; y < N; y++){
               
                     //make rock is the sum is small
-                    if (y > N-N/10) {
+                    if (y > (N-(N/10))) {
                         state.board[x][y] = ROCK;
-                    } else if (y > N-N/5) { //make the sea
+                    } else if (y > (N-(N/5))) { //make the sea
                         state.board[x][y] = BLUE;
                     } else if (y < N/10) { //make sand
                         state.board[x][y] = YELLOW;
