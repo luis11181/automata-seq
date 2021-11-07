@@ -155,6 +155,9 @@ int main(int argc, char **argv)
 
                     int x = event.button.x / CELL_WIDTH;
                     int y = event.button.y / CELL_HEIGHT;
+                    int hoverx, hovery;
+                    Uint32 buttons;
+
                     switch (automata) {
                         case GAME_OF_LIFE:
                             state.board[x][y] = (state.board[x][y] + 1) % 2;
@@ -169,9 +172,6 @@ int main(int argc, char **argv)
                         case FALLING_SAND_SIM:
                         // for loop to change the state of the board in each poisition the mouse is hovering
                             
-                            int hoverx, hovery;
-                            Uint32 buttons;
-
                             SDL_PumpEvents();  // make sure we have the latest mouse state.
 
                             buttons = SDL_GetMouseState(&hoverx, &hovery);
@@ -185,28 +185,7 @@ int main(int argc, char **argv)
                             break;
                     }
                     break;
-                case SDL_MOUSEBUTTONUP:
-                    state.mode = PAUSED_MODE;
-                    SDL_SetWindowTitle(window, paused_title);
-
-                    int x = event.button.x / CELL_WIDTH;
-                    int y = event.button.y / CELL_HEIGHT;
-                    switch (automata) {
-                        case GAME_OF_LIFE:
-                            state.board[x][y] = (state.board[x][y] + 1) % 2;
-                            break;
-                        case BRIANS_BRAIN:
-                            state.board[x][y] = (state.board[x][y] + 1) % 3;
-                            break;
-                        case WIREWORLD:
-                            state.board[x][y] = (state.board[x][y] + 1) % 4;
-                            break;
-                        // USE MODULE 9 TO ONLY GET A NUMBER BETWEEN 0 AND 9 THAT ARE HE NUMBER OF COLORS
-                        case FALLING_SAND_SIM:
-                            state.board[x][y] = ((state.board[x][y] + 1 != 1 ? state.board[x][y] + 1 : state.board[x][y] + 2)) % 9;
-                            break;
-                    }
-                    break;
+               
                 //event if left is used
                 case SDLK_LEFT:
                         //do something with left arrow
@@ -217,7 +196,7 @@ int main(int argc, char **argv)
                         state.mode = RUNNING_MODE + PAUSED_MODE - state.mode;
                         SDL_SetWindowTitle(window, state.mode ? paused_title : running_title);
                     }  //*makes a meteorite effect if m or M are pressed 
-                    else if (event.key.keysym.sym == 'm' || event.key.keysym.sym == 'M') {mmmm
+                    else if (event.key.keysym.sym == 'm' || event.key.keysym.sym == 'M') {
                       int random = rand() % 19;
                         for (int x = N/20*random; x < N/20*random + N/20; x++)
                             for (int y = 0; y < N/20; y++)
