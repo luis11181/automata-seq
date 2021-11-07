@@ -177,7 +177,7 @@ int main(int argc, char **argv)
                             buttons = SDL_GetMouseState(&hoverx, &hovery);
 
                             //SDL_Log("Mouse cursor is at %d, %d", x, y);
-                            while ((buttons & SDL_BUTTON_LMASK) != 0) {
+                            while ((buttons ) != 0) {
                                 SDL_Log("Mouse Button 1 (left) is pressed.");
                                 state.board[hoverx][hovery] = ((state.board[hoverx][hovery] + 1 != 1 ? state.board[hoverx][hovery] + 1 : state.board[hoverx][hovery] + 2)) % 9;
                             }
