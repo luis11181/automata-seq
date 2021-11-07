@@ -182,7 +182,7 @@ int main(int argc, char **argv)
                         SDL_SetWindowTitle(window, state.mode ? paused_title : running_title);
                     }  //*makes a meteorite effect if m or M are pressed 
                     else if (event.key.keysym.sym == 'm' || event.key.keysym.sym == 'M') {
-                        for (int x = 0; x < N/2; x++)
+                        for (int x = 0; x < N/4; x++)
                             for (int y = 0; y < N/20; y++)
                                 state.board[x][y] = (rand() % 2) ? ROCK : AIR;
                     }                                            
@@ -215,7 +215,7 @@ int main(int argc, char **argv)
                 wireworld(renderer, &state);
                 break;
             case FALLING_SAND_SIM:
-                sand_sim(renderer, &state);
+                world_sand_sim(renderer, &state);
                 break;
         }
 

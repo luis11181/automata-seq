@@ -235,7 +235,8 @@ void wireworld(SDL_Renderer *renderer, state_t *state)
 ////////////////////////////////////////////////////////////////////////////////!!
 //SAND SIMULATION FUNCTIONS
 
-bool sand_sim_puede_moverse(state_t *state, short sustancia, int x, int y){
+//world_sim_puede_moverse define si un elemento se puede mover o interactura dada la presencia de otro elemento en su posicion destino
+bool world_sim_puede_moverse(state_t *state, short sustancia, int x, int y){
     if(x <= 0 || x >= N-1 || y <= 0 || y >= N-1){ return false;}
     switch (sustancia)
     {
@@ -289,11 +290,12 @@ bool sand_sim_puede_moverse(state_t *state, short sustancia, int x, int y){
       return false;
       break;
     }
-    
+
     return false;
 }
 
 
+//* all _sim_mover , define cuales seran las regls e interacciones que genera cada elemento al moverse
 
 //La mejor forma seria importar la direccion a todo el arreglo de flags y trabajar con el, pero no pude hacerlo asi
 void sand_sim_mover(state_t *state, bool *flag1, bool *flag2, int fromX, int fromY, int toX, int toY){
@@ -304,9 +306,26 @@ void sand_sim_mover(state_t *state, bool *flag1, bool *flag2, int fromX, int fro
     *flag2 = true;
 }
 
-void sand_sim(SDL_Renderer *renderer, state_t *state)
+void rock_sim_mover(state_t *state, bool *flag1, bool *flag2, int fromX, int fromY, int toX, int toY){
+    short otraSustancia = state->board[toX][toY];
+    state->board[fromX][fromY] = otraSustancia;
+    state->board[toX][toY] = ROCK;
+    *flag1 = true;
+    *flag2 = true;
+}
+
+void water_sim_mover(state_t *state, bool *flag1, bool *flag2, int fromX, int fromY, int toX, int toY){
+    short otraSustancia = state->board[toX][toY];
+    state->board[fromX][fromY] = otraSustancia;
+    state->board[toX][toY] = WATER;
+    *flag1 = true;
+    *flag2 = true;
+}
+
+//* world_sand_sim() RUNS THE SIMULATION logic for all elements of the world
+void world_sand_sim(SDL_Renderer *renderer, state_t *state)
 {
-    if (state->mode == RUNNING_MODE)
+    if (state->mode == RUNNING_MODE){
     for (int i = 0; i < MOVES_PER_FRAME; i++) {
         //int new_board[N][N] = {state->board};
         bool seHaMovidoFlags[N][N] = {false};
@@ -318,33 +337,80 @@ void sand_sim(SDL_Renderer *renderer, state_t *state)
                 //Saltar si ya se ha movido esta posicion
                 if(seHaMovidoFlags[x][y]) continue;
                 
+                //rules and functions for sand
                 if(state->board[x][y] == SAND){
-                    if(sand_sim_puede_moverse(state, SAND, x, y + 1)){ //Mover abajo
+                    if(world_sim_puede_moverse(state, SAND, x, y + 1)){ //Mover abajo
                         sand_sim_mover(state, &seHaMovidoFlags[x][y],&seHaMovidoFlags[x][y+1], x, y, x, y + 1);
                     } else { 
                     
+                    //random number to define if it should go lest or right
                       bool primeroIzquierda = drand48() < 0.5;
 
                       if(primeroIzquierda){
-                          if(sand_sim_puede_moverse(state, SAND, x - 1, y + 1)){ //Mover a la izquierda
+                          if(world_sim_puede_moverse(state, SAND, x - 1, y + 1)){ //Mover a la izquierda
                               sand_sim_mover(state, &seHaMovidoFlags[x][y],&seHaMovidoFlags[x-1][y+1], x, y, x-1, y+1);
-                          } else if(sand_sim_puede_moverse(state, SAND, x + 1, y + 1)){ //Mover a la derecha
-                              sand_sim_mover(state, &seHaMovidoFlags[x][y],&seHaMovidoFlags[x+1][y+1], x, y, x+1, y+1);
                           } 
                       } else {
-                          if(sand_sim_puede_moverse(state, SAND, x + 1, y + 1)){ //Mover a la derecha
+                         if(world_sim_puede_moverse(state, SAND, x + 1, y + 1)){ //Mover a la derecha
                               sand_sim_mover(state, &seHaMovidoFlags[x][y],&seHaMovidoFlags[x+1][y+1], x, y, x+1, y+1);
-                          } else if(sand_sim_puede_moverse(state, SAND, x - 1, y + 1)){ //Mover a la izquierda
-                              sand_sim_mover(state, &seHaMovidoFlags[x][y],&seHaMovidoFlags[x-1][y+1], x, y, x-1, y+1);
                           } 
                       }
+                    } 
+                        
+                }
 
-                    }
+                //rules and functions for sand
+                if(state->board[x][y] == ROCK){
+                    if(world_sim_puede_moverse(state, ROCK, x, y + 1)){ //Mover abajo
+                        rock_sim_mover(state, &seHaMovidoFlags[x][y],&seHaMovidoFlags[x][y+1], x, y, x, y + 1);
+                    } else { 
+                    
+                    //random number to define if it should go lest or right
+                      bool primeroIzquierda = drand48() < 0.5;
+
+                      if(primeroIzquierda){
+                          if(world_sim_puede_moverse(state, ROCK, x - 1, y + 1)){ //Mover a la izquierda
+                              rock_sim_mover(state, &seHaMovidoFlags[x][y],&seHaMovidoFlags[x-1][y+1], x, y, x-1, y+1);
+                          } 
+                      } else {
+                         if(world_sim_puede_moverse(state, ROCK, x + 1, y + 1)){ //Mover a la derecha
+                              rock_sim_mover(state, &seHaMovidoFlags[x][y],&seHaMovidoFlags[x+1][y+1], x, y, x+1, y+1);
+                          } 
+                      }
+                    } 
+                        
+                }
+
+               //rules and functions for water
+                if(state->board[x][y] == WATER){
+                    if(world_sim_puede_moverse(state, WATER, x, y + 1)){ //Mover abajo
+                        water_sim_mover(state, &seHaMovidoFlags[x][y],&seHaMovidoFlags[x][y+1], x, y, x, y + 1);
+                    } else { 
+                    
+                    //random number to define if it should go lest or right
+                      bool primeroIzquierda = drand48() < 0.5;
+
+                      if(primeroIzquierda){
+                          if(world_sim_puede_moverse(state, WATER, x - 1, y + 1)){ //Mover a la izquierda
+                              water_sim_mover(state, &seHaMovidoFlags[x][y],&seHaMovidoFlags[x-1][y+1], x, y, x-1, y+1);
+                          } else if(world_sim_puede_moverse(state, WATER, x - 1, y )){ //Mover a la derecha
+                              water_sim_mover(state, &seHaMovidoFlags[x][y],&seHaMovidoFlags[x-1][y], x, y, x-1, y);
+                          } 
+                      } else {
+                          if(world_sim_puede_moverse(state, WATER, x + 1, y + 1)){ //Mover a la derecha
+                              water_sim_mover(state, &seHaMovidoFlags[x][y],&seHaMovidoFlags[x+1][y+1], x, y, x+1, y+1);
+                          } else if(world_sim_puede_moverse(state, WATER, x + 1, y)){ //Mover a la izquierda
+                              water_sim_mover(state, &seHaMovidoFlags[x][y],&seHaMovidoFlags[x+1][y], x, y, x+1, y);
+                          } 
+                      }
+                    } 
                         
                 }
 
             }
         }
 
+        
+    }
     }
 }
