@@ -108,11 +108,11 @@ int main(int argc, char **argv)
         case FALLING_SAND_SIM:
             for (int x = 0; x < N; x++)
                 for (int y = 0; y < N-5; y++)
-                    state.board[x][y] = AIR;
+                    state.board[x][y] = WHITEBLUE;
 
             for (int x = 0; x < N; x++)
                 for (int y = N-3; y < N; y++)
-                    state.board[x][y] = ROCK;               
+                    state.board[x][y] = GRAY;               
             break;
 
         default:
