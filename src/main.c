@@ -121,8 +121,10 @@ int main(int argc, char **argv)
                     }
                 }
             }       
-            state.board[0][0] = ROCK;
+            state.board[0][0] = GREEN;
             state.board[N-1][N-1] = FIRE;
+            state.board[N-3][N-3] = FIRE;
+            state.board[N-5][N-5] = FIRE;
             break;
 
         default:
