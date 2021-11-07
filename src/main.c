@@ -142,8 +142,8 @@ int main(int argc, char **argv)
                     break;
 
                 case SDL_MOUSEBUTTONDOWN:
-                    //state.mode = PAUSED_MODE;
-                    //SDL_SetWindowTitle(window, paused_title);
+                    state.mode = PAUSED_MODE;
+                    SDL_SetWindowTitle(window, paused_title);
 
                     int x = event.button.x / CELL_WIDTH;
                     int y = event.button.y / CELL_HEIGHT;
