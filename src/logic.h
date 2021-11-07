@@ -30,7 +30,10 @@ enum CELL {
     RED,
     GRAY,
     YELLOW,
-    PURPLE
+    PURPLE,
+    GREEN,
+    WHITEBLUE, // 176, 241, 247
+   
 };
 
 /* CELL NAME MACROS */
@@ -59,6 +62,7 @@ enum CELL {
 #define WATER BLUE
 #define OIL PURPLE
 #define FIRE RED
+#define CLOUD WHITEBLUE
 
 
 typedef struct {
