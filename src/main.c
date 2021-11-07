@@ -106,9 +106,6 @@ int main(int argc, char **argv)
             break;
 
         case FALLING_SAND_SIM:
-
-          state.board[0][0] = ROCK;
-          state.board[N-1][N-1] = FIRE;
             for (int x = 0; x < N; x++){
                 for (int y = 0; y < N; y++){
               
@@ -124,6 +121,8 @@ int main(int argc, char **argv)
                     }
                 }
             }       
+            state.board[0][0] = ROCK;
+            state.board[N-1][N-1] = FIRE;
             break;
 
         default:
