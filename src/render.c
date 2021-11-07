@@ -290,6 +290,7 @@ bool sand_sim_puede_moverse(state_t *state, short sustancia, int x, int y){
       break;
     }
     
+    return false;
 }
 
 
