@@ -346,8 +346,8 @@ void fire_sim_mover(state_t *state, bool *flag1, bool *flag2, int fromX, int fro
     }     
     else
     {
-      state->board[fromX][fromY] = AIR;
-      state->board[toX][toY] = otraSustancia;
+      state->board[fromX][fromY] = state->board[toX][toY];
+      state->board[toX][toY] = FIRE;
       *flag1 = true;
       *flag2 = true;
     }
