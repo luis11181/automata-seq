@@ -179,8 +179,7 @@ int main(int argc, char **argv)
                                 state.board[x][y] = (rand() % 2) ? SAND : AIR;
                     }                                            
                     break;
-            }   
-          }
+            }
         }
 
         SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
@@ -213,6 +212,7 @@ int main(int argc, char **argv)
         }
 
         SDL_RenderPresent(renderer);
+
     }
 
     SDL_DestroyWindow(window);
