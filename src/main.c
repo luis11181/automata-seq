@@ -163,14 +163,24 @@ int main(int argc, char **argv)
                             break;
                     }
                     break;
+                //event if left is used
+                case SDLK_LEFT:
+                        //do something with left arrow
+                    break;
 
                 case SDL_KEYDOWN:
                     if (event.key.keysym.sym == ' ') {
                         state.mode = RUNNING_MODE + PAUSED_MODE - state.mode;
                         SDL_SetWindowTitle(window, state.mode ? paused_title : running_title);
-                    }
+                    }  //makes a meteoride if m or M are pressed 
+                    else if (event.key.keysym.sym == 'm' || event.key.keysym.sym == 'M') {
+                        for (int x = 0; x < N; x++)
+                            for (int y = N-N/10; y < N; y++)
+                                state.board[x][y] = (rand() % 2) ? SAND : AIR;
+                    }                                            
                     break;
-            }
+            }   
+          }
         }
 
         SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
