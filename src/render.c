@@ -60,12 +60,12 @@ void render_grid(SDL_Renderer *renderer, const state_t *state)
                     SDL_RenderFillRect(renderer, &rect);
                     break;
                 case WHITEBLUE:
-                SDL_SetRenderDrawColor(renderer, WHITEBLUE_CELL_COLOR.r, WHITEBLUE_CELL_COLOR.g, WHITEBLUE_CELL_COLOR.b, 255);
-                SDL_RenderFillRect(renderer, &rect);
+                    SDL_SetRenderDrawColor(renderer, WHITEBLUE_CELL_COLOR.r, WHITEBLUE_CELL_COLOR.g, WHITEBLUE_CELL_COLOR.b, 255);
+                    SDL_RenderFillRect(renderer, &rect);
                     break;
                 case GREEN:
-                SDL_SetRenderDrawColor(renderer, GREEN_CELL_COLOR.r, GREEN_CELL_COLOR.g, GREEN_CELL_COLOR.b, 255);
-                SDL_RenderFillRect(renderer, &rect);
+                    SDL_SetRenderDrawColor(renderer, GREEN_CELL_COLOR.r, GREEN_CELL_COLOR.g, GREEN_CELL_COLOR.b, 255);
+                    SDL_RenderFillRect(renderer, &rect);
                     break;
                    
                 case PURPLE:
@@ -236,10 +236,63 @@ void wireworld(SDL_Renderer *renderer, state_t *state)
 //SAND SIMULATION FUNCTIONS
 
 bool sand_sim_puede_moverse(state_t *state, short sustancia, int x, int y){
-    if(x < 0 || x >= N || y < 0 || y >= N){ return false;}
-    if(state->board[x][y] == AIR){ return true;}
-    return false;
+    if(x <= 0 || x >= N-1 || y <= 0 || y >= N-1){ return false;}
+    switch (sustancia)
+    {
+    case SAND:
+      if(state->board[x][y] == AIR){ return true;} 
+      else if (state->board[x][y] == SAND){ return false;}
+      else if (state->board[x][y] == WATER){ return true;}
+      else if (state->board[x][y] == ROCK){ return false;}
+      else
+      {
+        return false
+      }
+      
+      break;
+
+    case WATER:
+      if(state->board[x][y] == AIR){ return true;} 
+      else if (state->board[x][y] == SAND){ return false;}
+      else if (state->board[x][y] == WATER){ return false;}
+      else if (state->board[x][y] == ROCK){ return false;}
+      else
+      {
+        return false
+      }
+      break;
+  
+    case ROCK:
+      if(state->board[x][y] == AIR){ return true;} 
+      else if (state->board[x][y] == SAND){ return false;}
+      else if (state->board[x][y] == WATER){ return true;}
+      else if (state->board[x][y] == ROCK){ return false;}
+      else
+      {
+        return false
+      }
+      break;
+
+    case AIR: 
+      if(state->board[x][y] == AIR){ return true;}
+      break;
+
+    case FIRE:
+      if(state->board[x][y] == FIRE){ return true;}
+      break;
+
+    case OIL:
+      if(state->board[x][y] == OIL){ return true;}
+      break;
+    
+    default:
+      return false;
+      break;
+    }
+    
 }
+
+
 
 //La mejor forma seria importar la direccion a todo el arreglo de flags y trabajar con el, pero no pude hacerlo asi
 void sand_sim_mover(state_t *state, bool *flag1, bool *flag2, int fromX, int fromY, int toX, int toY){
@@ -258,7 +311,6 @@ void sand_sim(SDL_Renderer *renderer, state_t *state)
         bool seHaMovidoFlags[N][N] = {false};
 
         
-
         for (int y = N-1; y >= 0; y--){
             for (int x = 0; x < N; x++) {
                 
@@ -270,21 +322,21 @@ void sand_sim(SDL_Renderer *renderer, state_t *state)
                         sand_sim_mover(state, &seHaMovidoFlags[x][y],&seHaMovidoFlags[x][y+1], x, y, x, y + 1);
                     } else { 
                     
-                    bool primeroIzquierda = drand48() < 0.5;
+                      bool primeroIzquierda = drand48() < 0.5;
 
-                    if(primeroIzquierda){
-                        if(sand_sim_puede_moverse(state, SAND, x - 1, y + 1)){ //Mover a la izquierda
-                            sand_sim_mover(state, &seHaMovidoFlags[x][y],&seHaMovidoFlags[x-1][y+1], x, y, x-1, y+1);
-                        } else if(sand_sim_puede_moverse(state, SAND, x + 1, y + 1)){ //Mover a la derecha
-                            sand_sim_mover(state, &seHaMovidoFlags[x][y],&seHaMovidoFlags[x+1][y+1], x, y, x+1, y+1);
-                        } 
-                    } else {
-                        if(sand_sim_puede_moverse(state, SAND, x + 1, y + 1)){ //Mover a la derecha
-                            sand_sim_mover(state, &seHaMovidoFlags[x][y],&seHaMovidoFlags[x+1][y+1], x, y, x+1, y+1);
-                        } else if(sand_sim_puede_moverse(state, SAND, x - 1, y + 1)){ //Mover a la izquierda
-                            sand_sim_mover(state, &seHaMovidoFlags[x][y],&seHaMovidoFlags[x-1][y+1], x, y, x-1, y+1);
-                        } 
-                    }
+                      if(primeroIzquierda){
+                          if(sand_sim_puede_moverse(state, SAND, x - 1, y + 1)){ //Mover a la izquierda
+                              sand_sim_mover(state, &seHaMovidoFlags[x][y],&seHaMovidoFlags[x-1][y+1], x, y, x-1, y+1);
+                          } else if(sand_sim_puede_moverse(state, SAND, x + 1, y + 1)){ //Mover a la derecha
+                              sand_sim_mover(state, &seHaMovidoFlags[x][y],&seHaMovidoFlags[x+1][y+1], x, y, x+1, y+1);
+                          } 
+                      } else {
+                          if(sand_sim_puede_moverse(state, SAND, x + 1, y + 1)){ //Mover a la derecha
+                              sand_sim_mover(state, &seHaMovidoFlags[x][y],&seHaMovidoFlags[x+1][y+1], x, y, x+1, y+1);
+                          } else if(sand_sim_puede_moverse(state, SAND, x - 1, y + 1)){ //Mover a la izquierda
+                              sand_sim_mover(state, &seHaMovidoFlags[x][y],&seHaMovidoFlags[x-1][y+1], x, y, x-1, y+1);
+                          } 
+                      }
 
                     }
                         

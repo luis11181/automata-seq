@@ -180,10 +180,10 @@ int main(int argc, char **argv)
                     if (event.key.keysym.sym == ' ') {
                         state.mode = RUNNING_MODE + PAUSED_MODE - state.mode;
                         SDL_SetWindowTitle(window, state.mode ? paused_title : running_title);
-                    }  //makes a meteoride if m or M are pressed 
+                    }  //*makes a meteorite effect if m or M are pressed 
                     else if (event.key.keysym.sym == 'm' || event.key.keysym.sym == 'M') {
-                        for (int x = 0; x < N; x++)
-                            for (int y = 0; y < N/10; y++)
+                        for (int x = 0; x < N/2; x++)
+                            for (int y = 0; y < N/20; y++)
                                 state.board[x][y] = (rand() % 2) ? ROCK : AIR;
                     }                                            
                     break;
