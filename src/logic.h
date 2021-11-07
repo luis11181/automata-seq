@@ -33,7 +33,6 @@ enum CELL {
     PURPLE,
     GREEN,
     WHITEBLUE, // 176, 241, 247
-   
 };
 
 /* CELL NAME MACROS */

@@ -110,14 +110,14 @@ int main(int argc, char **argv)
                 for (int y = 0; y < N; y++){
               
                     //make rock is the sum is small
-                    if (x+y < N/10) {
+                    if (y < N/10) {
                         state.board[x][y] = ROCK;
-                    } else if (x+y < N/5) { //make the sea
+                    } else if (y < N/5) { //make the sea
                         state.board[x][y] = BLUE;
-                    } else if (x+y < N/3) { //make sand
+                    } else if (y > N-5) { //make sand
                         state.board[x][y] = YELLOW;
                     } else { //everithing else is air
-                        state.board[x][y] = BLACK;
+                        state.board[x][y] = AIR;
                     }
                 }
             }       
@@ -142,8 +142,8 @@ int main(int argc, char **argv)
                     break;
 
                 case SDL_MOUSEBUTTONDOWN:
-                    state.mode = PAUSED_MODE;
-                    SDL_SetWindowTitle(window, paused_title);
+                    //state.mode = PAUSED_MODE;
+                    //SDL_SetWindowTitle(window, paused_title);
 
                     int x = event.button.x / CELL_WIDTH;
                     int y = event.button.y / CELL_HEIGHT;
@@ -157,8 +157,9 @@ int main(int argc, char **argv)
                         case WIREWORLD:
                             state.board[x][y] = (state.board[x][y] + 1) % 4;
                             break;
+                        // USE MODULE 9 TO ONLY GET A NUMBER BETWEEN 0 AND 9 THAT ARE HE NUMBER OF COLORS
                         case FALLING_SAND_SIM:
-                            state.board[x][y] = ((state.board[x][y] + 1 != 1 ? state.board[x][y] + 1 : state.board[x][y] + 2) + 3) % 7;
+                            state.board[x][y] = ((state.board[x][y] + 1 != 1 ? state.board[x][y] + 1 : state.board[x][y] + 2)) % 9;
                             break;
                     }
                     break;
