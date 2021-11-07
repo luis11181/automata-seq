@@ -121,8 +121,15 @@ int main(int argc, char **argv)
                     }
                 }
             } 
-            printf(N);      
-            printf(state.board); 
+            // print the number N of the board in the console
+            printf("%d\n", N);
+            // print the matrix state,board in the console 
+            for (int x = 0; x < N; x++){
+                for (int y = 0; y < N; y++){
+                    printf("%d", state.board[x][y]);
+                }
+                printf("\n");
+            }
             state.board[0][0] = GREEN;
             state.board[N-1][N-1] = FIRE;
             state.board[N-3][N-3] = FIRE;
