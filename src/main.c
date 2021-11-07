@@ -117,7 +117,7 @@ int main(int argc, char **argv)
                     } else if (y < N/10) { //make sand
                         state.board[x][y] = YELLOW;
                     } else { //everithing else is air
-                        state.board[x][y] = BLACK;
+                        state.board[x][y] = BLUE;
                     }
                 }
             }       
