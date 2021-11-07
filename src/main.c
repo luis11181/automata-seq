@@ -115,17 +115,13 @@ int main(int argc, char **argv)
                     } else if (y > (N-(N/5))) { //make the sea
                         state.board[x][y] = BLUE;
                     } else if (y < N/10) { //make sand
-                        state.board[x][y] = YELLOW;
+                        state.board[x][y] = SAND;
                     } else { //everithing else is air
-                        state.board[x][y] = BLUE;
+                        state.board[x][y] = AIR;
                     }
                 }
             } 
                       
-            state.board[0][0] = GREEN;
-            state.board[N-1][N-1] = FIRE;
-            state.board[N-3][N-3] = FIRE;
-            state.board[N-5][N-5] = FIRE;
             // print the matrix state,board in the console to test
             for (int x = 0; x < N; x++){
                 for (int y = 0; y < N; y++){
@@ -188,7 +184,7 @@ int main(int argc, char **argv)
                     else if (event.key.keysym.sym == 'm' || event.key.keysym.sym == 'M') {
                         for (int x = 0; x < N; x++)
                             for (int y = 0; y < N/10; y++)
-                                state.board[x][y] = (rand() % 2) ? SAND : AIR;
+                                state.board[x][y] = (rand() % 2) ? ROCK : AIR;
                     }                                            
                     break;
             }
