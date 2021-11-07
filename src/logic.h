@@ -7,13 +7,14 @@
 #define CELL_WIDTH (SCREEN_WIDTH / N)
 #define CELL_HEIGHT (SCREEN_HEIGHT / N)
 #define MOVES_PER_FRAME 1
-#define MOVES_PER_SECOND 10
+#define MOVES_PER_SECOND 20
 
 enum AUTOMATA {
     LANGTONS_ANT,
     GAME_OF_LIFE,
     BRIANS_BRAIN,
     WIREWORLD,
+    FALLING_SAND_SIM,
 };
 
 enum MODE {
@@ -27,6 +28,9 @@ enum CELL {
     WHITE,
     BLUE,
     RED,
+    GRAY,
+    YELLOW,
+    PURPLE
 };
 
 /* CELL NAME MACROS */
@@ -47,6 +51,14 @@ enum CELL {
 #define CONDUCTOR WHITE
 #define ELECTRON_HEAD BLUE
 #define ELECTRON_TAIL RED
+
+// Falling sand simulator - materiales básicos
+#define AIR BLACK
+#define ROCK GRAY
+#define SAND YELLOW
+#define WATER BLUE
+#define OIL PURPLE
+#define FIRE RED
 
 
 typedef struct {

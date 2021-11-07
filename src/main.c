@@ -13,10 +13,11 @@
 void print_usage()
 {
     printf("Usage: ./automata AUTOMATA\n");
-    printf("       Langton's ant         -> langton\n");
-    printf("       Conway's Game of Life -> gameoflife\n");
-    printf("       Brian's brain         -> briansbrain\n");
-    printf("       Wireworld             -> wireworld\n");
+    printf("     Langton's ant           -> langton\n");
+    printf("     Conway's Game of Life   -> gameoflife\n");
+    printf("     Brian's brain           -> briansbrain\n");
+    printf("     Wireworld               -> wireworld\n");
+    printf("     Falling Sand Simulator  -> sandsim\n");
 }
 
 int main(int argc, char **argv)
@@ -44,6 +45,10 @@ int main(int argc, char **argv)
         automata = WIREWORLD;
         strncat(running_title, "WIREWORLD", 48);
         strncat(paused_title, "WIREWORLD", 48);
+    } else if (strcmp(argv[1], "sandsim") == 0) {
+        automata = FALLING_SAND_SIM;
+        strncat(running_title, "FALLING SAND SIMULATOR", 48);
+        strncat(paused_title, "FALLING SAND SIMULATOR", 48);
     } else {
         fprintf(stderr, "No such automata.\n");
         print_usage();
@@ -99,6 +104,16 @@ int main(int argc, char **argv)
             state.board[N / 2 + 2][N / 2 - 1] = WHITE;
             break;
 
+        case FALLING_SAND_SIM:
+            for (int x = 0; x < N; x++)
+                for (int y = 0; y < N-5; y++)
+                    state.board[x][y] = AIR;
+
+            for (int x = 0; x < N; x++)
+                for (int y = N-3; y < N; y++)
+                    state.board[x][y] = ROCK;               
+            break;
+
         default:
             for (int x = 0; x < N; x++)
                 for (int y = 0; y < N; y++)
@@ -132,6 +147,9 @@ int main(int argc, char **argv)
                             break;
                         case WIREWORLD:
                             state.board[x][y] = (state.board[x][y] + 1) % 4;
+                            break;
+                        case FALLING_SAND_SIM:
+                            state.board[x][y] = ((state.board[x][y] + 1 != 1 ? state.board[x][y] + 1 : state.board[x][y] + 2) + 3) % 7;
                             break;
                     }
                     break;
@@ -168,6 +186,9 @@ int main(int argc, char **argv)
 
             case WIREWORLD:
                 wireworld(renderer, &state);
+                break;
+            case FALLING_SAND_SIM:
+                sand_sim(renderer, &state);
                 break;
         }
 
