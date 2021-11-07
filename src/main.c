@@ -22,7 +22,7 @@ void print_usage()
 
 int main(int argc, char **argv)
 {
-    int automata;
+    int automata;//! automata defines the simulation we are running (see logic.h)
     char running_title[64] = {'\0'};
     char paused_title[64] = {'\0'};
 
@@ -83,6 +83,7 @@ int main(int argc, char **argv)
 
     state_t state = {.mode = RUNNING_MODE};
 
+     //! INIT BOARD AWITCHES THE GAME ACORDING TO THE AUTOMATA VARIABLES THAT WAS SELECTRED AT THE START
     // INIT BOARD
     switch (automata) {
         case LANGTONS_ANT:
