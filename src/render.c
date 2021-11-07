@@ -11,6 +11,8 @@ int mod(int a, int b)
     return r < 0 ? r + b : r;
 }
 
+//!! define color of the automate, already listed in logic properties
+
 const SDL_Color BLACK_CELL_COLOR = { .r = 0, .g = 0, .b = 0 };
 const SDL_Color WHITE_CELL_COLOR = { .r = 255, .g = 255, .b = 255 };
 const SDL_Color BLUE_CELL_COLOR = { .r = 0, .g = 0, .b = 255 };
@@ -18,6 +20,8 @@ const SDL_Color RED_CELL_COLOR = { .r = 255, .g = 0, .b = 0 };
 const SDL_Color GRAY_CELL_COLOR = { .r = 128, .g = 128, .b = 128 };
 const SDL_Color YELLOW_CELL_COLOR = { .r = 255, .g = 255, .b = 0 };
 const SDL_Color PURPLE_CELL_COLOR = { .r = 119, .g = 0, .b = 199 };
+const SDL_Color GREEN_CELL_COLOR = { .r = 0, .g = 255, .b = 0 };
+const SDL_Color WHITEBLUE_CELL_COLOR = { .r = 176, .g = 241, .b = 247 };
 
 const SDL_Color ANT_COLOR = { .r = 255, .g = 50, .b = 50 };
 
