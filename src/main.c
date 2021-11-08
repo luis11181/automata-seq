@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-
+#include <stdbool.h> 
 #include <SDL2/SDL.h>
 
 #include "logic.h"
@@ -190,7 +190,7 @@ int main(int argc, char **argv)
                     break;
 
                 case SDL_MOUSEBUTTONUP:
-                    draw=false
+                    draw=false;
                    // switch (event.button.button)
                     //{                       
                    // }
