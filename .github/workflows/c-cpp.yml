@@ -18,6 +18,8 @@ jobs:
     
     - name: install sdl2
       run: sudo apt-get install libsdl2-dev
+    - name: install ttf
+      run: sudo apt-get install libsdl2-ttf-dev
     - name: make clean
       run: make clean
     - name: make all
