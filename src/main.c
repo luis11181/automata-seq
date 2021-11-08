@@ -140,11 +140,13 @@ int main(int argc, char **argv)
     }
 
     SDL_Event event;
+    bool draw;
 
     while (state.mode != QUIT_MODE) {
       //! while loop to search for events and handle them doing an action dependong on the game
         while (SDL_PollEvent(&event)) {
             switch (event.type) {
+                
                 case SDL_QUIT:
                     state.mode = QUIT_MODE;
                     break;
@@ -155,8 +157,7 @@ int main(int argc, char **argv)
 
                     int x = event.button.x / CELL_WIDTH;
                     int y = event.button.y / CELL_HEIGHT;
-                    int hoverx, hovery;
-                    Uint32 buttons;
+                    draw= true;
 
                     switch (automata) {
                         case GAME_OF_LIFE:
@@ -172,18 +173,27 @@ int main(int argc, char **argv)
                         case FALLING_SAND_SIM:
                         // for loop to change the state of the board in each poisition the mouse is hovering
                             
-                            SDL_PumpEvents();  // make sure we have the latest mouse state.
-
-                            buttons = SDL_GetMouseState(&hoverx, &hovery);
-
-                            //SDL_Log("Mouse cursor is at %d, %d", x, y);
-                            
-                            SDL_Log("Mouse Button 1 (left) is pressed.");
-                            state.board[hoverx][hovery] = ((state.board[hoverx][hovery] + 1 != 1 ? state.board[hoverx][hovery] + 1 : state.board[hoverx][hovery] + 2)) % 9;
-                            
+                            state.board[x][y] = ((state.board[x][y] + 1 != 1 ? state.board[x][y] + 1 : state.board[x][y] + 2)) % 9;
                            
                             break;
                     }
+                    break;
+
+                
+                case sdl_mousemotion:
+                    if (draw)
+                    {
+                        int mousex = event.motion.x;
+                        int mousey = event.motion.y;
+                        state.board[mousex][mousey] = ((state.board[mousex][mousey] + 1 != 1 ? state.board[mousex][mousey] + 1 : state.board[mousex][mousey] + 2)) % 9;
+                    }
+                    break;
+
+                case SDL_MOUSEBUTTONUP:
+                    draw=false
+                   // switch (event.button.button)
+                    //{                       
+                   // }
                     break;
                
                 //event if left is used
