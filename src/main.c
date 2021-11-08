@@ -4,6 +4,7 @@
 #include <unistd.h>
 #include <stdbool.h> 
 #include <SDL2/SDL.h>
+#include <SDL_ttf.h>
 
 #include "logic.h"
 #include "render.h"
@@ -62,6 +63,8 @@ int main(int argc, char **argv)
         fprintf(stderr, "SDL_INIT Error: %s\n", SDL_GetError());
         return EXIT_FAILURE;
     }
+
+    TTF_Init();
 
     SDL_Window *window = SDL_CreateWindow(running_title, SDL_WINDOWPOS_UNDEFINED,
                                                                                 SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH,
@@ -279,6 +282,7 @@ int main(int argc, char **argv)
     }
 
     SDL_DestroyWindow(window);
+    TTF_Quit();
     SDL_Quit();
 
     return EXIT_SUCCESS;
