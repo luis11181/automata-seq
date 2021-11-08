@@ -139,6 +139,8 @@ int main(int argc, char **argv)
             break;
     }
 
+     //! event infinite loop, to switch events
+    // is a event is fired it executes the corresponding function
     SDL_Event event;
     bool draw;
 
@@ -171,8 +173,7 @@ int main(int argc, char **argv)
                             break;
                         // USE MODULE 9 TO ONLY GET A NUMBER BETWEEN 0 AND 9 THAT ARE HE NUMBER OF COLORS
                         case FALLING_SAND_SIM:
-                        // for loop to change the state of the board in each poisition the mouse is hovering
-                            
+                        // alter teh state of pixel with each click
                             state.board[x][y] = ((state.board[x][y] + 1 != 1 ? state.board[x][y] + 1 : state.board[x][y] + 2)) % 9;
                            
                             break;
@@ -183,8 +184,10 @@ int main(int argc, char **argv)
                 case SDL_MOUSEMOTION:
                     if (draw)
                     {
-                        int mousex = event.motion.x;
-                        int mousey = event.motion.y;
+                        int mouseix = event.motion.x;
+                        int mouseiy = event.motion.y;
+                        int mousex = mouseix / CELL_WIDTH;
+                        int mousey = mouseiy / CELL_HEIGHT;
                         state.board[mousex][mousey] = 3;
                     }
                     break;
