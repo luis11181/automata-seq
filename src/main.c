@@ -143,6 +143,44 @@ int main(int argc, char **argv)
     // is a event is fired it executes the corresponding function
     SDL_Event event;
     bool draw;
+    int drawing_element = FIRE;
+
+    //this opens a font style and sets a size
+TTF_Font* Sans = TTF_OpenFont("Sans.ttf", 24);
+
+// this is the color in rgb format,
+// maxing out all would give you the color white,
+// and it will be your text's color
+SDL_Color White = {255, 255, 255};
+
+// as TTF_RenderText_Solid could only be used on
+// SDL_Surface then you have to create the surface first
+SDL_Surface* surfaceMessage =
+    TTF_RenderText_Solid(Sans, "put your text here", White); 
+
+// now you can convert it into a texture
+SDL_Texture* Message = SDL_CreateTextureFromSurface(renderer, surfaceMessage);
+
+SDL_Rect Message_rect; //create a rect
+Message_rect.x = 0;  //controls the rect's x coordinate 
+Message_rect.y = 0; // controls the rect's y coordinte
+Message_rect.w = 100; // controls the width of the rect
+Message_rect.h = 100; // controls the height of the rect
+
+// (0,0) is on the top left of the window/screen,
+// think a rect as the text's box,
+// that way it would be very simple to understand
+
+// Now since it's a texture, you have to put RenderCopy
+// in your game loop area, the area where the whole code executes
+
+// you put the renderer's name first, the Message,
+// the crop size (you can ignore this if you don't want
+// to dabble with cropping), and the rect which is the size
+// and coordinate of your texture
+SDL_RenderCopy(renderer, Message, NULL, &Message_rect);
+
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
     while (state.mode != QUIT_MODE) {
       //! while loop to search for events and handle them doing an action dependong on the game
@@ -189,7 +227,7 @@ int main(int argc, char **argv)
                         int mouseiy = event.motion.y;
                         int mousex = mouseix / CELL_WIDTH;
                         int mousey = mouseiy / CELL_HEIGHT;
-                        state.board[mousex][mousey] = 3;
+                        state.board[mousex][mousey] = drawing_element;
                     }
                     break;
 
@@ -212,7 +250,18 @@ int main(int argc, char **argv)
                         for (int x = N/20*random; x < N/20*random + N/20; x++)
                             for (int y = 0; y < N/20; y++)
                                 state.board[x][y] = (rand() % 2) ? ROCK : FIRE;
-                    }                                            
+                    }           
+                    else if (event.key.keysym.sym == 'f' || event.key.keysym.sym == 'F') {
+                      drawing_element = FIRE;
+                    }                                       
+                    else if (event.key.keysym.sym == 's' || event.key.keysym.sym == 'S') {
+                      drawing_element = SAND;
+                    }                     
+                    else if (event.key.keysym.sym == 'r' || event.key.keysym.sym == 'R') {
+                      drawing_element = ROCK;
+                    }
+                    else if (event.key.keysym.sym == 'w' || event.key.keysym.sym == 'w') {
+                      drawing_element = WATER;                  
                     break;
             }
         }
