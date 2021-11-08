@@ -222,7 +222,7 @@ int main(int argc, char **argv)
                       drawing_element = FIRE;
 
 
-/*
+                      /**
                       TTF_Font* Sans =TTF_OpenFont("Sans.ttf", 20);
                       SDL_Color white_font = { .r = 0, .g = 0, .b = 0 };
                       //render text on screen with SDL with the element that is being drawn 
@@ -236,6 +236,8 @@ int main(int argc, char **argv)
                       SDL_RenderCopy(renderer, Message, NULL, &Message_rect);
                       SDL_FreeSurface(surfaceMessage);
                       SDL_DestroyTexture(Message);
+
+                      */
                       
                     }                                       
                     else if (event.key.keysym.sym == 's' || event.key.keysym.sym == 'S') {
