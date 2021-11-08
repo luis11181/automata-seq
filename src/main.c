@@ -161,6 +161,7 @@ int main(int argc, char **argv)
                     int y = event.button.y / CELL_HEIGHT;
                     draw= true;
 
+                    // TOGGLES BETWEEN EACH ELEMENT TYPE WITH EACH CLICK
                     switch (automata) {
                         case GAME_OF_LIFE:
                             state.board[x][y] = (state.board[x][y] + 1) % 2;
@@ -180,7 +181,7 @@ int main(int argc, char **argv)
                     }
                     break;
 
-                
+                // if the click is pressed and there is movement the mouse will draw any picture
                 case SDL_MOUSEMOTION:
                     if (draw)
                     {
@@ -194,9 +195,6 @@ int main(int argc, char **argv)
 
                 case SDL_MOUSEBUTTONUP:
                     draw=false;
-                   // switch (event.button.button)
-                    //{                       
-                   // }
                     break;
                
                 //event if left is used
