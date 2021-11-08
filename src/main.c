@@ -185,7 +185,7 @@ int main(int argc, char **argv)
                     {
                         int mousex = event.motion.x;
                         int mousey = event.motion.y;
-                        state.board[mousex][mousey] = ((state.board[mousex][mousey] + 1 != 1 ? state.board[mousex][mousey] + 1 : state.board[mousex][mousey] + 2)) % 9;
+                        state.board[mousex][mousey] = 3;
                     }
                     break;
 
