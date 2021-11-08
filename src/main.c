@@ -180,7 +180,7 @@ int main(int argc, char **argv)
                     break;
 
                 
-                case sdl_mousemotion:
+                case SDL_MOUSEMOTION:
                     if (draw)
                     {
                         int mousex = event.motion.x;
