@@ -1,6 +1,6 @@
 CC=gcc
 CFLAGS=-Wall
-LDFLAGS=-lSDL2 -lSDL2_ttf 
+LDFLAGS=-lSDL2 -lSDL2_ttf -lSDL2_image
 
 SRC=$(wildcard src/*.c)
 OBJ=$(patsubst src/%.c, src/%.o, $(SRC))
