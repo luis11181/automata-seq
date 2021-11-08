@@ -222,6 +222,7 @@ int main(int argc, char **argv)
                       drawing_element = FIRE;
 
 
+                    // codigo para imprimir el elemento que se esta usando al cambiarlo, no sirve pq no encuentra la libreria sdl_ttf.h,  aunque ya la instale e importe en el makefile
                       /**
                       TTF_Font* Sans =TTF_OpenFont("Sans.ttf", 20);
                       SDL_Color white_font = { .r = 0, .g = 0, .b = 0 };
