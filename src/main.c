@@ -4,7 +4,7 @@
 #include <unistd.h>
 #include <stdbool.h> 
 #include <SDL2/SDL.h>
-#include <SDL_ttf.h>
+//#include <SDL_ttf.h>
 
 #include "logic.h"
 #include "render.h"
@@ -221,6 +221,8 @@ int main(int argc, char **argv)
                     else if (event.key.keysym.sym == 'f' || event.key.keysym.sym == 'F') {
                       drawing_element = FIRE;
 
+
+/*
                       TTF_Font* Sans =TTF_OpenFont("Sans.ttf", 20);
                       SDL_Color white_font = { .r = 0, .g = 0, .b = 0 };
                       //render text on screen with SDL with the element that is being drawn 
