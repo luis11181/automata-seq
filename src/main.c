@@ -128,9 +128,9 @@ int main(int argc, char **argv)
             // print the matrix state,board in the console to test
             for (int x = 0; x < N; x++){
                 for (int y = 0; y < N; y++){
-                    printf("%d", state.board[x][y]);
+                    //printf("%d", state.board[x][y]);
                 }
-                printf("\n");
+                //printf("\n");
             }
             break;
 
@@ -181,7 +181,7 @@ int main(int argc, char **argv)
                         case FALLING_SAND_SIM:
                         // alter teh state of pixel with each click
                             state.board[x][y] = ((state.board[x][y] + 1 != 1 ? state.board[x][y] + 1 : state.board[x][y] + 2)) % 9;
-                           
+                            drawing_element = state.board[x][y];
                             break;
                     }
                     break;
