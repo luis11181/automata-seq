@@ -302,6 +302,11 @@ bool world_sim_puede_moverse(state_t *state, short sustancia, int x, int y){
 
       break;
     
+    case HUMO:
+      if(state->board[x][y] == AIR){ return true;} 
+      
+      break;
+    
     default:
       return false;
       break;
@@ -321,14 +326,21 @@ void sand_sim_mover(state_t *state, bool seHaMovidoFlags[N][N], int fromX, int f
     {
     case FIRE:
         if(otraSustancia == OIL){
-            state->board[fromX][fromY] = AIR;
-            state->board[toX][toY] = sustancia;
+            state->board[fromX][fromY] =FIRE;
+            state->board[toX][toY] = FIRE;
         } else if(otraSustancia == WATER){
-            state->board[fromX][fromY] = AIR;
+            state->board[fromX][fromY] = HUMO;
             state->board[toX][toY] = WATER;
         } else{
-            state->board[fromX][fromY] = otraSustancia;
-            state->board[toX][toY] = sustancia;
+            bool seDescompone= drand48() < 0.2;
+            if(seDescompone){
+                state->board[fromX][fromY] = HUMO;
+                state->board[toX][toY] = otraSustancia;
+            } else{
+                state->board[fromX][fromY] = otraSustancia;
+                state->board[toX][toY] = FIRE;
+            }
+  
         }
         break;
     default:
@@ -409,7 +421,40 @@ bool sand_sim_mover_abajo_y_lados(state_t *state, short sustancia, bool seHaMovi
     return false; 
 }
 
-//* world_sand_sim() RUNS THE SIMULATION logic for all elements of the world
+
+// x, y: Posición de la partícula que se mueve arriba o a los lados
+bool sand_sim_mover_arriba_y_lados(state_t *state, short sustancia, bool seHaMovidoFlags[N][N],int x, int y){
+    
+    if(world_sim_puede_moverse(state, sustancia, x, y - 1)){ //Mover arriba
+        sand_sim_mover(state, seHaMovidoFlags, x, y, x, y - 1);
+        return true;
+    }
+
+    bool primeroIzquierda = drand48() < 0.5;
+
+    if(primeroIzquierda){
+        if(world_sim_puede_moverse(state, sustancia, x - 1, y - 1)){ //Mover a la izquierda
+            sand_sim_mover(state, seHaMovidoFlags, x, y, x-1, y-1);
+            return true;
+        } else if (world_sim_puede_moverse(state, sustancia, x + 1, y - 1)){ //Mover a la derecha
+            sand_sim_mover(state, seHaMovidoFlags, x, y, x+1, y-1);
+            return true;
+        }
+    } else {
+        if(world_sim_puede_moverse(state, sustancia, x + 1, y - 1)){ //Mover a la derecha
+            sand_sim_mover(state, seHaMovidoFlags, x, y, x+1, y-1);
+            return true;
+        } else if (world_sim_puede_moverse(state, sustancia, x - 1, y - 1)){ //Mover a la izquierda
+            sand_sim_mover(state, seHaMovidoFlags, x, y, x-1, y-1);
+            return true;
+        }
+    }
+    
+    return false; 
+}
+
+
+//***** world_sand_sim() RUNS THE SIMULATION logic for all elements of the world
 void world_sand_sim(SDL_Renderer *renderer, state_t *state)
 {
     if (state->mode == RUNNING_MODE){
@@ -455,7 +500,25 @@ void world_sand_sim(SDL_Renderer *renderer, state_t *state)
 
                 //*g rules and functions for fire
                 if(state->board[x][y] == FIRE){
-                    sand_sim_mover_abajo_y_lados(state, FIRE, seHaMovidoFlags, x, y);
+                    if (!sand_sim_mover_abajo_y_lados(state, FIRE, seHaMovidoFlags, x, y))
+                    {
+                      bool seDescompone= drand48() < 0.2;
+                      if(seDescompone){
+                          state->board[x][y] = HUMO;
+                      } 
+
+                    }
+                    
+                }
+
+                //*g rules and functions for humo
+                if(state->board[x][y] == HUMO){
+                  //Si el humo no puede moverse arriba o diagonal va para los lados
+                    if(!sand_sim_mover_arriba_y_lados(state, HUMO, seHaMovidoFlags, x, y)){
+                        //Se mueve a la izquierda o derecha
+                        sand_sim_mover_izq_der(state, HUMO, seHaMovidoFlags, x, y);
+                    }   
+                    
                 }
 
             }
