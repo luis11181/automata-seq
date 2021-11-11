@@ -280,7 +280,11 @@ int main(int argc, char **argv)
                     else if (event.key.keysym.sym == 'w' || event.key.keysym.sym == 'w') {
                       drawing_element = WATER; } 
                     else if (event.key.keysym.sym == '+' ) {
+                      //print brush size
+                      printf("%d",brushSize);
                        brushSize =  brushSize + N/100;
+                       //print brush size
+                      printf("%d",brushSize);
                     }
                     else if (event.key.keysym.sym == '-') {
                       brushSize =  brushSize - N/100 ;
