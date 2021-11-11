@@ -281,13 +281,22 @@ int main(int argc, char **argv)
                       drawing_element = WATER; } 
                     else if (event.key.keysym.sym == '+' ) {
                       //print brush size
-                      printf("%d",brushSize);
-                       brushSize =  brushSize + N/100;
+                      if (brushSize<N/5)
+                      {
+                        
+                       brushSize =  brushSize + 1;
                        //print brush size
-                      printf("%d",brushSize);
+                       printf("%d",brushSize);
+                      }
+                      
                     }
                     else if (event.key.keysym.sym == '-') {
-                      brushSize =  brushSize - N/100 ;
+                      if (brushSize>0)
+                      {
+                       brushSize =  brushSize + 1;
+                       //print brush size
+                       printf("%d",brushSize);
+                      }
                     }
                       
                 break;}
