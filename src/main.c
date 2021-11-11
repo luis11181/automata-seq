@@ -148,7 +148,7 @@ int main(int argc, char **argv)
     SDL_Event event;
     bool draw;
     int drawing_element = FIRE;
-    int brushSize = 1;
+    int brushSize = 5;
        
 
     while (state.mode != QUIT_MODE) {
