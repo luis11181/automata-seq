@@ -258,6 +258,7 @@ bool world_sim_puede_moverse(state_t *state, short sustancia, int x, int y){
       else if (state->board[x][y] == WATER && drand48() < 0.5){ return true;}
       else if (state->board[x][y] == ROCK){ return false;}
       else if (state->board[x][y] == OIL){ return true;}
+      else if (state->board[x][y] == HUMO){ return true;}
       
       break;
 
@@ -267,6 +268,7 @@ bool world_sim_puede_moverse(state_t *state, short sustancia, int x, int y){
       else if (state->board[x][y] == WATER){ return false;}
       else if (state->board[x][y] == ROCK){ return false;}
       else if (state->board[x][y] == OIL && drand48() < 0.5){ return true;}
+      else if (state->board[x][y] == HUMO){ return true;}
 
       break;
   
@@ -276,6 +278,7 @@ bool world_sim_puede_moverse(state_t *state, short sustancia, int x, int y){
       else if (state->board[x][y] == WATER && drand48() < 0.9 ){ return true;}
       else if (state->board[x][y] == ROCK){ return false;}
       else if (state->board[x][y] == OIL && drand48() < 0.9){ return true;}
+      else if (state->board[x][y] == HUMO){ return true;}
 
       break;
 
@@ -291,6 +294,7 @@ bool world_sim_puede_moverse(state_t *state, short sustancia, int x, int y){
       else if (state->board[x][y] == ROCK){ return false;}
       else if (state->board[x][y] == FIRE){ return false;}
       else if (state->board[x][y] == OIL){ return true;}
+      else if (state->board[x][y] == HUMO){ return true;}
       break;
 
     case OIL:
@@ -299,6 +303,7 @@ bool world_sim_puede_moverse(state_t *state, short sustancia, int x, int y){
       else if (state->board[x][y] == WATER){ return false;}
       else if (state->board[x][y] == ROCK){ return false;}
       else if (state->board[x][y] == OIL){ return false;}
+      else if (state->board[x][y] == HUMO){ return true;}
 
       break;
     
@@ -332,7 +337,7 @@ void sand_sim_mover(state_t *state, bool seHaMovidoFlags[N][N], int fromX, int f
             state->board[fromX][fromY] = HUMO;
             state->board[toX][toY] = WATER;
         } else{
-            bool seDescompone= drand48() < 0.2;
+            bool seDescompone= drand48() < 0.02;
             if(seDescompone){
                 state->board[fromX][fromY] = HUMO;
                 state->board[toX][toY] = otraSustancia;
@@ -343,6 +348,21 @@ void sand_sim_mover(state_t *state, bool seHaMovidoFlags[N][N], int fromX, int f
   
         }
         break;
+
+    case HUMO:
+        
+        bool seDescompone= drand48() < 0.02;
+        if(seDescompone){
+            state->board[fromX][fromY] = AIR;
+            state->board[toX][toY] = otraSustancia;
+        } else{
+            state->board[fromX][fromY] = otraSustancia;
+            state->board[toX][toY] = sustancia;
+        }
+  
+        
+        break;
+
     default:
         state->board[fromX][fromY] = otraSustancia;
         state->board[toX][toY] = sustancia;
