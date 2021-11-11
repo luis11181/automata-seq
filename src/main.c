@@ -288,16 +288,11 @@ int main(int argc, char **argv)
                       
                     }
                     else if (event.key.keysym.sym == '-') {
-                      if (brushSize>0)
+                      if (brushSize>1)
                       {
                        brushSize =  brushSize - 1;
                       }
-                      else
-                      {
-                        /* code */
-                      }
-                      
-                    }
+                       }
                       
                 break;}
         }
