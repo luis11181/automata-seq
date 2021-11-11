@@ -201,8 +201,8 @@ int main(int argc, char **argv)
                         int mousey = mouseiy / CELL_HEIGHT;
                         
                         
-                        for(int y = fmax(0,mousey-brushSize); y < fmin(N-1, mousey+brushSize); ++y){
-                              for(int x = fmax(0,mousex-brushSize); x < fmin(N-1, mousex+brushSize); ++x){
+                        for(int y = max(0,mousey-brushSize); y < min(N-1, mousey+brushSize); ++y){
+                              for(int x = max(0,mousex-brushSize); x < min(N-1, mousex+brushSize); ++x){
                                 state.board[mousex][mousey] = drawing_element;
                               }
                             }
