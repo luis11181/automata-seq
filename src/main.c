@@ -148,7 +148,7 @@ int main(int argc, char **argv)
     SDL_Event event;
     bool draw;
     int drawing_element = FIRE;
-    int brushSize = 5;
+    int brushSize = 2;
        
 
     while (state.mode != QUIT_MODE) {
@@ -283,19 +283,14 @@ int main(int argc, char **argv)
                       //print brush size
                       if (brushSize<N/5)
                       {
-                        
                        brushSize =  brushSize + 1;
-                       //print brush size
-                       printf("%d",brushSize);
                       }
                       
                     }
                     else if (event.key.keysym.sym == '-') {
                       if (brushSize>0)
                       {
-                       brushSize =  brushSize + 1;
-                       //print brush size
-                       printf("%d",brushSize);
+                       brushSize =  brushSize - 1;
                       }
                     }
                       
