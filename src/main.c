@@ -161,6 +161,9 @@ int main(int argc, char **argv)
                     break;
 
                 case SDL_MOUSEBUTTONDOWN:
+
+                  draw= true;
+
                     if (automata!=FALLING_SAND_SIM)
                     {
                       state.mode = PAUSED_MODE;
@@ -169,7 +172,7 @@ int main(int argc, char **argv)
                 
                     int x = event.button.x / CELL_WIDTH;
                     int y = event.button.y / CELL_HEIGHT;
-                    draw= true;
+                    
 
                     // TOGGLES BETWEEN EACH ELEMENT TYPE WITH EACH CLICK
                     switch (automata) {
@@ -189,10 +192,12 @@ int main(int argc, char **argv)
                             //state.board[x][y] = ((state.board[x][y] + 1 != 1 ? state.board[x][y] + 1 : state.board[x][y] + 2)) % 9;
 
                            // drawing_element = state.board[x][y];
-
+                           
                              for(int y = max(0,mousey-brushSize); y < min(N-1, mousey+brushSize); ++y){
                               for(int x = max(0,mousex-brushSize); x < min(N-1, mousex+brushSize); ++x){
-                                state.board[mousex][mousey] = drawing_element;
+                                //print the variable brushSize
+                                //printf("%d",brushSize);
+                                state.board[x][y] = drawing_element;
                               }
                             }
                             
@@ -202,7 +207,23 @@ int main(int argc, char **argv)
 
                 // if the click is pressed and there is movement the mouse will draw any picture
                 case SDL_MOUSEMOTION:
-                    //do something
+                    if (draw)
+                    {
+                        int mouseix = event.motion.x;
+                        int mouseiy = event.motion.y;
+                        int mousex = mouseix / CELL_WIDTH;
+                        int mousey = mouseiy / CELL_HEIGHT;
+                        
+                        
+                        for(int y = max(0,mousey-brushSize); y < min(N-1, mousey+brushSize); ++y){
+                              for(int x = max(0,mousex-brushSize); x < min(N-1, mousex+brushSize); ++x){
+                                //print the variable brushSize
+                                //printf("%d",brushSize);
+                                state.board[x][y] = drawing_element;
+                              }
+                            }
+
+                    }
                     break;
 
                 case SDL_MOUSEBUTTONUP:
@@ -265,21 +286,6 @@ int main(int argc, char **argv)
                       
                 break;}
         }
-
-        if (draw){
-            int mouseix = event.motion.x;
-            int mouseiy = event.motion.y;
-            int mousex = mouseix / CELL_WIDTH;
-            int mousey = mouseiy / CELL_HEIGHT;
-            
-            
-            for(int y = max(0,mousey-brushSize); y < min(N-1, mousey+brushSize); ++y){
-                  for(int x = max(0,mousex-brushSize); x < min(N-1, mousex+brushSize); ++x){
-                    state.board[mousex][mousey] = drawing_element;
-                  }
-                }
-
-                    }
 
         SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
         SDL_RenderClear(renderer);
