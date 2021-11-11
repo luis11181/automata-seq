@@ -6,6 +6,7 @@
 #include <SDL2/SDL.h>
 //#include <SDL_ttf.h>
 
+#include "util.h"
 #include "logic.h"
 #include "render.h"
 
@@ -160,7 +161,7 @@ int main(int argc, char **argv)
                     break;
 
                 case SDL_MOUSEBUTTONDOWN:
-                    if (automata!==FALLING_SAND_SIM)
+                    if (automata!=FALLING_SAND_SIM)
                     {
                       state.mode = PAUSED_MODE;
                       SDL_SetWindowTitle(window, paused_title);
