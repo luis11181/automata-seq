@@ -189,9 +189,10 @@ int main(int argc, char **argv)
                         case FALLING_SAND_SIM:
                         // alter teh state of pixel with each click
 
-                            //state.board[x][y] = ((state.board[x][y] + 1 != 1 ? state.board[x][y] + 1 : state.board[x][y] + 2)) % 9;
-
-                           // drawing_element = state.board[x][y];
+                            int mouseix = event.motion.x;
+                            int mouseiy = event.motion.y;
+                            int mousex = mouseix / CELL_WIDTH;
+                            int mousey = mouseiy / CELL_HEIGHT;
                            
                              for(int y = max(0,mousey-brushSize); y < min(N-1, mousey+brushSize); ++y){
                               for(int x = max(0,mousex-brushSize); x < min(N-1, mousex+brushSize); ++x){
