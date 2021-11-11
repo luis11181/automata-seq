@@ -147,6 +147,7 @@ int main(int argc, char **argv)
     SDL_Event event;
     bool draw;
     int drawing_element = FIRE;
+    int brushSize = 1;
        
 
     while (state.mode != QUIT_MODE) {
@@ -159,9 +160,12 @@ int main(int argc, char **argv)
                     break;
 
                 case SDL_MOUSEBUTTONDOWN:
-                    state.mode = PAUSED_MODE;
-                    SDL_SetWindowTitle(window, paused_title);
-
+                    if (automata!==FALLING_SAND_SIM)
+                    {
+                      state.mode = PAUSED_MODE;
+                      SDL_SetWindowTitle(window, paused_title);
+                    }
+                
                     int x = event.button.x / CELL_WIDTH;
                     int y = event.button.y / CELL_HEIGHT;
                     draw= true;
@@ -194,7 +198,14 @@ int main(int argc, char **argv)
                         int mouseiy = event.motion.y;
                         int mousex = mouseix / CELL_WIDTH;
                         int mousey = mouseiy / CELL_HEIGHT;
-                        state.board[mousex][mousey] = drawing_element;
+                        
+                        
+                        for(int y = max(0,mousey-brushSize); y < min(N-1, mousey+brushSize); ++y){
+                              for(int x = max(0,mousex-brushSize); x < min(N-1, mousex+brushSize); ++x){
+                                state.board[mousex][mousey] = drawing_element;
+                              }
+                            }
+
                     }
                     break;
 
@@ -248,9 +259,15 @@ int main(int argc, char **argv)
                       drawing_element = ROCK;
                     }
                     else if (event.key.keysym.sym == 'w' || event.key.keysym.sym == 'w') {
-                      drawing_element = WATER;                  
-                    break;
-            } }
+                      drawing_element = WATER; } 
+                    else if (event.key.keysym.sym == '+' ) {
+                       brushSize =  brushSize + N/100;
+                    }
+                    else if (event.key.keysym.sym == '-') {
+                      brushSize =  brushSize - N/100 ;
+                    }
+                      
+                break;}
         }
 
         SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
