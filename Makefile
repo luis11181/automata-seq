@@ -1,6 +1,6 @@
 CC=gcc
-CFLAGS=-Wall
-LDFLAGS=-lSDL2 -lSDL2_ttf 
+CFLAGS= -Wall sdl2-config --cflags
+LDFLAGS= sdl2-config --libs -lSDL2 -lSDL2_ttf 
 
 SRC=$(wildcard src/*.c)
 OBJ=$(patsubst src/%.c, src/%.o, $(SRC))
