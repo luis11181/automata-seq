@@ -185,8 +185,11 @@ int main(int argc, char **argv)
                         // USE MODULE 9 TO ONLY GET A NUMBER BETWEEN 0 AND 9 THAT ARE HE NUMBER OF COLORS
                         case FALLING_SAND_SIM:
                         // alter teh state of pixel with each click
+
+                        /*
                             state.board[x][y] = ((state.board[x][y] + 1 != 1 ? state.board[x][y] + 1 : state.board[x][y] + 2)) % 9;
                             drawing_element = state.board[x][y];
+                            */
                             break;
                     }
                     break;
