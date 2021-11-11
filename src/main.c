@@ -188,7 +188,8 @@ int main(int argc, char **argv)
                         // USE MODULE 9 TO ONLY GET A NUMBER BETWEEN 0 AND 9 THAT ARE HE NUMBER OF COLORS
                         case FALLING_SAND_SIM:
                         // alter teh state of pixel with each click
-
+                          if (draw)
+                          {
                             int mouseix = event.motion.x;
                             int mouseiy = event.motion.y;
                             int mousex = mouseix / CELL_WIDTH;
@@ -200,7 +201,7 @@ int main(int argc, char **argv)
                                 //printf("%d",brushSize);
                                 state.board[x][y] = drawing_element;
                               }
-                            }
+                           }}
                             
                             break;
                     }
