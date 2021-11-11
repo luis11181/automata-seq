@@ -351,16 +351,17 @@ void sand_sim_mover(state_t *state, bool seHaMovidoFlags[N][N], int fromX, int f
 
     case HUMO:
         
-        bool seDescompone= drand48() < 0.02;
-        if(seDescompone){
+        if (true)
+        {
+            bool seDescompone= drand48() < 0.02;
+            if(seDescompone){
             state->board[fromX][fromY] = AIR;
-            state->board[toX][toY] = otraSustancia;
-        } else{
+            state->board[toX][toY] = otraSustancia; } 
+            else{
             state->board[fromX][fromY] = otraSustancia;
             state->board[toX][toY] = sustancia;
-        }
-  
-        
+        }}
+
         break;
 
     default:
