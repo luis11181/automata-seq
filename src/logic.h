@@ -1,7 +1,7 @@
 #ifndef LOGIC_H_
 #define LOGIC_H_
 
-#define N 100
+#define N 200
 #define SCREEN_WIDTH 800.0
 #define SCREEN_HEIGHT 800.0
 #define CELL_WIDTH (SCREEN_WIDTH / N)
@@ -33,6 +33,8 @@ enum CELL {
     PURPLE,
     GREEN,
     WHITEBLUE, // 176, 241, 247
+    GRAYSMOKE,
+    STRUCTURE
 };
 
 /* CELL NAME MACROS */
@@ -62,6 +64,8 @@ enum CELL {
 #define OIL PURPLE
 #define FIRE RED
 #define CLOUD WHITEBLUE
+#define HUMO GRAYSMOKE
+#define ESTATICO STRUCTURE 
 
 
 typedef struct {

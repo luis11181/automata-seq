@@ -22,6 +22,9 @@ const SDL_Color YELLOW_CELL_COLOR = { .r = 255, .g = 255, .b = 0 };
 const SDL_Color PURPLE_CELL_COLOR = { .r = 119, .g = 0, .b = 199 };
 const SDL_Color GREEN_CELL_COLOR = { .r = 0, .g = 255, .b = 0 };
 const SDL_Color WHITEBLUE_CELL_COLOR = { .r = 176, .g = 241, .b = 247 };
+const SDL_Color GRAYSMOKE_CELL_COLOR = { .r = 176, .g = 176, .b = 176 };
+const SDL_Color STRUCTURE_CELL_COLOR = { .r = 67, .g = 59, .b = 27 };
+
 
 const SDL_Color ANT_COLOR = { .r = 255, .g = 50, .b = 50 };
 
@@ -70,6 +73,14 @@ void render_grid(SDL_Renderer *renderer, const state_t *state)
                    
                 case PURPLE:
                     SDL_SetRenderDrawColor(renderer, PURPLE_CELL_COLOR.r, PURPLE_CELL_COLOR.g, PURPLE_CELL_COLOR.b, 255);
+                    SDL_RenderFillRect(renderer, &rect);
+                    break;
+                case GRAYSMOKE:
+                    SDL_SetRenderDrawColor(renderer, GRAYSMOKE_CELL_COLOR.r, GRAYSMOKE_CELL_COLOR.g, GRAYSMOKE_CELL_COLOR.b, 255);
+                    SDL_RenderFillRect(renderer, &rect);
+                    break;
+                case STRUCTURE:
+                    SDL_SetRenderDrawColor(renderer, STRUCTURE_CELL_COLOR.r, STRUCTURE_CELL_COLOR.g, STRUCTURE_CELL_COLOR.b, 255);
                     SDL_RenderFillRect(renderer, &rect);
                     break;
                 default: {}
@@ -433,6 +444,7 @@ void world_sand_sim(SDL_Renderer *renderer, state_t *state)
                     }   
                 }
 
+              //*g  rules and functions for oil
                 if(state->board[x][y] == OIL){
                     //Si el agua no se puede mover abajo o a los lados
                     if(!sand_sim_mover_abajo_y_lados(state, OIL, seHaMovidoFlags, x, y)){

@@ -109,6 +109,7 @@ int main(int argc, char **argv)
             state.board[N / 2 + 2][N / 2 - 1] = WHITE;
             break;
 
+         //* initial state of the world
         case FALLING_SAND_SIM:
             for (int x = 0; x < N; x++){
                 for (int y = 0; y < N; y++){
@@ -123,6 +124,10 @@ int main(int argc, char **argv)
                     } else { //everithing else is air
                         state.board[x][y] = AIR;
                     }
+                    
+                    if (y < (N-(N*0.75))&& y > (N-(N*0.8)) && x < (N-(N*0.25)) && x > (N-(N*0.3) )) { //make sand
+                        state.board[x][y] = ESTATICO;
+                    } 
                 }
             } 
                       
@@ -133,12 +138,12 @@ int main(int argc, char **argv)
                 }
                 //printf("\n");
             }
-            break;
+          break;
 
         default:
             for (int x = 0; x < N; x++)
                 for (int y = 0; y < N; y++)
-                    state.board[x][y] = BLACK;
+                    state.board[x][y] = AIR;
 
             break;
     }
@@ -197,8 +202,6 @@ int main(int argc, char **argv)
                            
                              for(int y = max(0,mousey-brushSize); y < min(N-1, mousey+brushSize); ++y){
                               for(int x = max(0,mousex-brushSize); x < min(N-1, mousex+brushSize); ++x){
-                                //print the variable brushSize
-                                //printf("%d",brushSize);
                                 state.board[x][y] = drawing_element;
                               }
                            }}
@@ -219,9 +222,7 @@ int main(int argc, char **argv)
                         
                         for(int y = max(0,mousey-brushSize); y < min(N-1, mousey+brushSize); ++y){
                               for(int x = max(0,mousex-brushSize); x < min(N-1, mousex+brushSize); ++x){
-                                //print the variable brushSize
-                                //printf("%d",brushSize);
-                                state.board[x][y] = drawing_element;
+                                 state.board[x][y] = drawing_element;
                               }
                             }
 
@@ -277,8 +278,15 @@ int main(int argc, char **argv)
                     else if (event.key.keysym.sym == 'r' || event.key.keysym.sym == 'R') {
                       drawing_element = ROCK;
                     }
-                    else if (event.key.keysym.sym == 'w' || event.key.keysym.sym == 'w') {
+                    else if (event.key.keysym.sym == 'w' || event.key.keysym.sym == 'W') {
                       drawing_element = WATER; } 
+
+                    else if (event.key.keysym.sym == 'h' || event.key.keysym.sym == 'H') {
+                      drawing_element = HUMO; } 
+                    else if (event.key.keysym.sym == 'e' || event.key.keysym.sym == 'E') {
+                      drawing_element = ESTATICO; } 
+                    else if (event.key.keysym.sym == 'o' || event.key.keysym.sym == 'O') {
+                      drawing_element = OIL; } 
                     else if (event.key.keysym.sym == '+' ) {
                       //print brush size
                       if (brushSize<N/5)
