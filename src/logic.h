@@ -65,7 +65,7 @@ enum CELL {
 #define FIRE RED
 #define CLOUD WHITEBLUE
 #define HUMO GRAYSMOKE
-#define ESTATICO STRUCTURE 
+#define ESTATICO STRUCTURE a
 
 
 typedef struct {

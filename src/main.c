@@ -274,7 +274,10 @@ int main(int argc, char **argv)
                     }                                       
                     else if (event.key.keysym.sym == 's' || event.key.keysym.sym == 'S') {
                       drawing_element = SAND;
-                    }                     
+                    }  
+                    else if (event.key.keysym.sym == 'a' || event.key.keysym.sym == 'A') {
+                      drawing_element = AIR;
+                    }                              
                     else if (event.key.keysym.sym == 'r' || event.key.keysym.sym == 'R') {
                       drawing_element = ROCK;
                     }
