@@ -292,6 +292,11 @@ int main(int argc, char **argv)
                       {
                        brushSize =  brushSize - 1;
                       }
+                      else
+                      {
+                        /* code */
+                      }
+                      
                     }
                       
                 break;}
