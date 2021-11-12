@@ -255,11 +255,8 @@ int main(int argc, char **argv)
                     
 
                     // codigo para imprimir el elemento que se esta usando al cambiarlo, no sirve pq no encuentra la libreria sdl_ttf.h,  aunque ya la instale e importe en el makefile
-                      
+                      /**
                       TTF_Font* Sans =TTF_OpenFont("Sans.ttf", 20);
-                      if(!TTF_Font*) {
-                      printf("TTF_OpenFont: %s\n", TTF_GetError());
-                        }
                       SDL_Color white_font = { .r = 0, .g = 0, .b = 0 };
                       //render text on screen with SDL with the element that is being drawn 
                       SDL_Surface *surfaceMessage = TTF_RenderText_Solid(Sans, "FIRE", white_font); //
@@ -273,7 +270,7 @@ int main(int argc, char **argv)
                       SDL_FreeSurface(surfaceMessage);
                       SDL_DestroyTexture(Message);
 
-                      
+                      */
                       
                     }                                       
                     else if (event.key.keysym.sym == 's' || event.key.keysym.sym == 'S') {
