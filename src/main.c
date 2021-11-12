@@ -278,7 +278,8 @@ int main(int argc, char **argv)
                     SDL_Color color={252,150,17};
 
                     SDL_Surface *screen = TTF_RenderText_Solid(font, "FIRE", color);
-                    SDL_Surface *surfaceMessage = TTF_RenderText_Solid(font, "FIREeeeeeeeeeeee", white_font);
+                    SDL_Surface *surfaceMessage2 = TTF_RenderText_Solid(font, "FIREeeeeeeeeeeee", white_font); //
+                    SDL_Texture *surfaceMessage = SDL_CreateTextureFromSurface(renderer, surfaceMessage2); // now you can convert it into a texture
                     SDL_Surface *text_surface = SDL_CreateTextureFromSurface(renderer, surfaceMessage);
                     if(!(text_surface=TTF_RenderText_Solid(font,"Hello World!",color))) {
                         //handle error here, perhaps print TTF_GetError at least
