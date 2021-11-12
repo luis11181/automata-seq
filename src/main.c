@@ -270,7 +270,7 @@ int main(int argc, char **argv)
                       drawing_element = FIRE;
                       
                       char aa[]= "Fire";
-                      strcpy(dest,aa)
+                      strcpy(dest,aa);
                     
                     
 
@@ -302,7 +302,7 @@ int main(int argc, char **argv)
                     else if (event.key.keysym.sym == 's' || event.key.keysym.sym == 'S') {
                       drawing_element = SAND;
                       char bb[]= "Sand";
-                      strcpy(dest,bb)
+                      strcpy(dest,bb);
                     }  
                     else if (event.key.keysym.sym == 'a' || event.key.keysym.sym == 'A') {
                       drawing_element = AIR;
