@@ -275,7 +275,7 @@ int main(int argc, char **argv)
                     // then free the text surface
                     
 
-                    SDL_Surface *screen= = TTF_RenderText_Solid(font, "FIRE", color);
+                    SDL_Surface *screen = TTF_RenderText_Solid(font, "FIRE", color);
                     SDL_Color color={252,150,17};
                     SDL_Surface *text_surface = SDL_CreateTextureFromSurface(renderer, surfaceMessage);
                     if(!(text_surface=TTF_RenderText_Solid(font,"Hello World!",color))) {
