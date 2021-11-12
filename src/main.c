@@ -288,7 +288,7 @@ int main(int argc, char **argv)
                     }
                     
 
-/*
+
                       
                       SDL_Color white_font = { .r = 6, .g = 150, .b = 78 };
                       //render text on screen with SDL with the element that is being drawn 
