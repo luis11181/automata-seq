@@ -169,8 +169,7 @@ int main(int argc, char **argv)
     int drawing_element = FIRE;
     int brushSize = 2;
 
-    char src[]= "Fire";
-    char dest[200]= "xxxxx";
+    char dest[200]= "Fire";
        
 
     while (state.mode != QUIT_MODE) {
@@ -271,33 +270,7 @@ int main(int argc, char **argv)
                       
                       char aa[]= "Fire";
                       strcpy(dest,aa);
-                    
-                    
-
-                    // codigo para imprimir el elemento que se esta usando al cambiarlo, no sirve pq no encuentra la libreria sdl_ttf.h,  aunque ya la instale e importe en el makefile
- 	
-                    // Render some text in solid black to a new surface
-                    // then blit to the upper left of the screen
-                    // then free the text surface
-                    /*
-                    SDL_Color color={252,150,17};
-
-                    SDL_Surface *screen = TTF_RenderText_Solid(font, "FIRE", color);
-                    
-                    SDL_Surface *text_surface = SDL_CreateTextureFromSurface(renderer, surfaceMessage);
-                    if(!(text_surface=TTF_RenderText_Solid(font,"Hello World!",color))) {
-                        //handle error here, perhaps print TTF_GetError at least
-                    } else {
-                        SDL_BlitSurface(text_surface,NULL,screen,NULL);
-                        //perhaps we can reuse it, but I assume not for simplicity.
-                       // SDL_FreeSurface(text_surface);
-                    }
-                                        
-                     */
-                      
-
-                    
-                      
+                 
                     }                                       
                     else if (event.key.keysym.sym == 's' || event.key.keysym.sym == 'S') {
                       drawing_element = SAND;
@@ -306,19 +279,33 @@ int main(int argc, char **argv)
                     }  
                     else if (event.key.keysym.sym == 'a' || event.key.keysym.sym == 'A') {
                       drawing_element = AIR;
+                      char cc[]= "Air";
+                      strcpy(dest,cc);
                     }                              
                     else if (event.key.keysym.sym == 'r' || event.key.keysym.sym == 'R') {
                       drawing_element = ROCK;
+                      char dd[]= "Rock";
+                      strcpy(dest,dd);
                     }
                     else if (event.key.keysym.sym == 'w' || event.key.keysym.sym == 'W') {
-                      drawing_element = WATER; } 
+                      drawing_element = WATER; 
+                      char ee[]= "Water";
+                      strcpy(dest,ee);
+                  } 
 
                     else if (event.key.keysym.sym == 'h' || event.key.keysym.sym == 'H') {
-                      drawing_element = HUMO; } 
+                      drawing_element = HUMO;
+                      char ff[]= "Humo";
+                      strcpy(dest,ff);
+                   } 
                     else if (event.key.keysym.sym == 'e' || event.key.keysym.sym == 'E') {
-                      drawing_element = ESTATICO; } 
+                      drawing_element = ESTATICO; 
+                      char gg[]= "Estatico";
+                      strcpy(dest,gg);} 
                     else if (event.key.keysym.sym == 'o' || event.key.keysym.sym == 'O') {
-                      drawing_element = OIL; } 
+                      drawing_element = OIL;
+                      char hh[]= "Oil";
+                      strcpy(dest,hh); } 
                     else if (event.key.keysym.sym == '+' ) {
                       //print brush size
                       if (brushSize<N/5)
