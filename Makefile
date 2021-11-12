@@ -1,5 +1,5 @@
 CC=gcc
-CFLAGS= -Wall 
+CFLAGS= -Wall -c `sdl-config --cflags`
 LDFLAGS=  -lSDL2 -lSDL2_ttf 
 
 SRC=$(wildcard src/*.c)
