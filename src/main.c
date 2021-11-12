@@ -4,7 +4,8 @@
 #include <unistd.h>
 #include <stdbool.h> 
 #include <SDL2/SDL.h>
-#include <SDL_ttf.h>
+#include "include/SDL2/SDL_ttf.h"
+/usr/include/SDL2/SDL_ttf.h /usr/local/include/SDL2/
 
 #include "util.h"
 #include "logic.h"
