@@ -273,13 +273,11 @@ int main(int argc, char **argv)
                     // Render some text in solid black to a new surface
                     // then blit to the upper left of the screen
                     // then free the text surface
-                    
-                    SDL_Color white_font = { .r = 6, .g = 150, .b = 78 };
+                    /*
                     SDL_Color color={252,150,17};
 
                     SDL_Surface *screen = TTF_RenderText_Solid(font, "FIRE", color);
-                    SDL_Surface *surfaceMessage2 = TTF_RenderText_Solid(font, "FIREeeeeeeeeeeee", white_font); //
-                    SDL_Texture *surfaceMessage = SDL_CreateTextureFromSurface(renderer, surfaceMessage2); // now you can convert it into a texture
+                    
                     SDL_Surface *text_surface = SDL_CreateTextureFromSurface(renderer, surfaceMessage);
                     if(!(text_surface=TTF_RenderText_Solid(font,"Hello World!",color))) {
                         //handle error here, perhaps print TTF_GetError at least
@@ -288,15 +286,13 @@ int main(int argc, char **argv)
                         //perhaps we can reuse it, but I assume not for simplicity.
                        // SDL_FreeSurface(text_surface);
                     }
-
-                    
                     
 
 /*
                       
-                      
+                      SDL_Color white_font = { .r = 6, .g = 150, .b = 78 };
                       //render text on screen with SDL with the element that is being drawn 
-                      SDL_Surface *surfaceMessage = TTF_RenderText_Solid(font, "FIREeeeeeeeeeeee", white_font); //
+                      SDL_Surface *surfaceMessage = TTF_RenderText_Solid(font, "FIRE", white_font); //
                       SDL_Texture *Message = SDL_CreateTextureFromSurface(renderer, surfaceMessage); // now you can convert it into a texture
                       SDL_Rect Message_rect;
                       Message_rect.x = 0;
@@ -376,6 +372,21 @@ int main(int argc, char **argv)
                 world_sand_sim(renderer, &state);
                 break;
         }
+
+        SDL_Color White = {255, 255, 255};  
+        SDL_Surface* surfaceMessage = NULL;
+        surfaceMessage = TTF_RenderText_Solid(font, 'ssss', White);
+        SDL_Texture* Message = NULL;
+        Message = SDL_CreateTextureFromSurface(renderer, surfaceMessage);
+
+        SDL_Rect Message_rect;
+        Message_rect.x = 0;
+        Message_rect.y = 0;
+        Message_rect.w = 100;
+        Message_rect.h = 100;
+
+        //UPDATE/GAMELOOP AREA, I DIDN'T REALLY PASTE THE WHOLE PART
+        SDL_RenderCopy(renderer, Message, NULL, &Message_rect);
 
         SDL_RenderPresent(renderer);
 
