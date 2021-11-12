@@ -4,7 +4,7 @@
 #include <unistd.h>
 #include <stdbool.h> 
 #include <SDL2/SDL.h>
-#include <SDL_ttf.h>
+//#include <SDL_ttf.h>
 
 #include "util.h"
 #include "logic.h"
@@ -251,7 +251,11 @@ int main(int argc, char **argv)
                     }           
                     else if (event.key.keysym.sym == 'f' || event.key.keysym.sym == 'F') {
                       drawing_element = FIRE;
-
+                    
+                    SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR,
+                         "Missing file",
+                         "File is missing. Please reinstall the program.",
+                         NULL);
 
                     // codigo para imprimir el elemento que se esta usando al cambiarlo, no sirve pq no encuentra la libreria sdl_ttf.h,  aunque ya la instale e importe en el makefile
                       /**
