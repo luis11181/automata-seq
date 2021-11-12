@@ -297,8 +297,8 @@ int main(int argc, char **argv)
                       Message_rect.w = surfaceMessage->w;
                       Message_rect.h = surfaceMessage->h;
                       SDL_RenderCopy(renderer, Message, NULL, &Message_rect);
-                      SDL_FreeSurface(surfaceMessage);
-                      SDL_DestroyTexture(Message);
+                      //SDL_FreeSurface(surfaceMessage);
+                     // SDL_DestroyTexture(Message);
                       
 
                     
