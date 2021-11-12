@@ -273,11 +273,12 @@ int main(int argc, char **argv)
                     // Render some text in solid black to a new surface
                     // then blit to the upper left of the screen
                     // then free the text surface
-                    /*
+                    
+                    SDL_Color white_font = { .r = 6, .g = 150, .b = 78 };
                     SDL_Color color={252,150,17};
 
                     SDL_Surface *screen = TTF_RenderText_Solid(font, "FIRE", color);
-                    
+                    SDL_Surface *surfaceMessage = TTF_RenderText_Solid(font, "FIREeeeeeeeeeeee", white_font);
                     SDL_Surface *text_surface = SDL_CreateTextureFromSurface(renderer, surfaceMessage);
                     if(!(text_surface=TTF_RenderText_Solid(font,"Hello World!",color))) {
                         //handle error here, perhaps print TTF_GetError at least
@@ -287,14 +288,14 @@ int main(int argc, char **argv)
                        // SDL_FreeSurface(text_surface);
                     }
 
-                    */
+                    
                     
 
-
+/*
                       
-                      SDL_Color white_font = { .r = 6, .g = 150, .b = 78 };
+                      
                       //render text on screen with SDL with the element that is being drawn 
-                      SDL_Surface *surfaceMessage = TTF_RenderText_Solid(font, "FIRE", white_font); //
+                      SDL_Surface *surfaceMessage = TTF_RenderText_Solid(font, "FIREeeeeeeeeeeee", white_font); //
                       SDL_Texture *Message = SDL_CreateTextureFromSurface(renderer, surfaceMessage); // now you can convert it into a texture
                       SDL_Rect Message_rect;
                       Message_rect.x = 0;
@@ -304,7 +305,7 @@ int main(int argc, char **argv)
                       SDL_RenderCopy(renderer, Message, NULL, &Message_rect);
                       //SDL_FreeSurface(surfaceMessage);
                      // SDL_DestroyTexture(Message);
-                     
+                     */
                       
 
                     
