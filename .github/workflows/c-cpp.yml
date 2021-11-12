@@ -2,25 +2,26 @@ name: C/C++ CI
 
 on:
   push:
-    branches: [ master ]
+    branches: [master]
   pull_request:
-    branches: [ master ]
+    branches: [master]
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
-    #- name: configure
-    #  run: ./configure
-    
-    - name: install sdl2
-      run: sudo apt-get install libsdl2-dev
-    - name: install ttf
-      run: sudo apt-get install libsdl2-ttf-dev
-    - name: make clean
-      run: make clean
-    - name: make all
-      run: make all
+      - uses: actions/checkout@v2
+      #- name: configure
+      #  run: ./configure
+
+      - name: install sdl2
+        run: sudo apt-get install libsdl2-dev
+      - name: install ttf
+        run: sudo apt-get install libsdl2-ttf-dev
+      - name: install fonts
+        run: sudo apt-get ttf-ubuntu-font-family
+      - name: make clean
+        run: make clean
+      - name: make all
+        run: make all

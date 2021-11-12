@@ -75,7 +75,7 @@ int main(int argc, char **argv)
     	
     // load font.ttf at size 16 into font
     TTF_Font *font;
-    font=TTF_OpenFont("Ubuntu-C.ttf", 16);
+    font=TTF_OpenFont("/usr/share/fonts/truetype/ubuntu/Ubuntu-M.ttf", 16);
     if(!font) {
         printf("TTF_OpenFont: %s\n", TTF_GetError());
         // handle error
@@ -273,7 +273,8 @@ int main(int argc, char **argv)
                     // Render some text in solid black to a new surface
                     // then blit to the upper left of the screen
                     // then free the text surface
-                    SDL_Surface *screen;
+                    /*
+                    SDL_Surface *screen= = TTF_RenderText_Solid(font, "FIRE", white_font);
                     SDL_Color color={252,150,17};
                     SDL_Surface *text_surface;
                     if(!(text_surface=TTF_RenderText_Solid(font,"Hello World!",color))) {
@@ -283,11 +284,12 @@ int main(int argc, char **argv)
                         //perhaps we can reuse it, but I assume not for simplicity.
                         SDL_FreeSurface(text_surface);
                     }
+                    */
 
-                      /*
+                      
                       SDL_Color white_font = { .r = 0, .g = 0, .b = 0 };
                       //render text on screen with SDL with the element that is being drawn 
-                      SDL_Surface *surfaceMessage = TTF_RenderText_Solid(Sans, "FIRE", white_font); //
+                      SDL_Surface *surfaceMessage = TTF_RenderText_Solid(font, "FIRE", white_font); //
                       SDL_Texture *Message = SDL_CreateTextureFromSurface(renderer, surfaceMessage); // now you can convert it into a texture
                       SDL_Rect Message_rect;
                       Message_rect.x = 0;
@@ -297,7 +299,7 @@ int main(int argc, char **argv)
                       SDL_RenderCopy(renderer, Message, NULL, &Message_rect);
                       SDL_FreeSurface(surfaceMessage);
                       SDL_DestroyTexture(Message);
-                      */
+                      
 
                     
                       
