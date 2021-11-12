@@ -168,6 +168,8 @@ int main(int argc, char **argv)
     bool draw;
     int drawing_element = FIRE;
     int brushSize = 2;
+
+    char text[50]= "Fire";
        
 
     while (state.mode != QUIT_MODE) {
@@ -265,6 +267,7 @@ int main(int argc, char **argv)
                     }           
                     else if (event.key.keysym.sym == 'f' || event.key.keysym.sym == 'F') {
                       drawing_element = FIRE;
+                      text= "Fire";
                     
                     
 
@@ -295,6 +298,7 @@ int main(int argc, char **argv)
                     }                                       
                     else if (event.key.keysym.sym == 's' || event.key.keysym.sym == 'S') {
                       drawing_element = SAND;
+                      text= "Sand";
                     }  
                     else if (event.key.keysym.sym == 'a' || event.key.keysym.sym == 'A') {
                       drawing_element = AIR;
@@ -363,7 +367,7 @@ int main(int argc, char **argv)
          
         SDL_Color white_font = { .r = 6, .g = 150, .b = 78 };
         //render text on screen with SDL with the element that is being drawn 
-        SDL_Surface *surfaceMessage = TTF_RenderText_Solid(font, "FIRE", white_font); //
+        SDL_Surface *surfaceMessage = TTF_RenderText_Solid(font, text, white_font); //
         SDL_Texture *Message = SDL_CreateTextureFromSurface(renderer, surfaceMessage); // now you can convert it into a texture
         SDL_Rect Message_rect;
         Message_rect.x = 0;
@@ -372,7 +376,7 @@ int main(int argc, char **argv)
         Message_rect.h = surfaceMessage->h;
         SDL_RenderCopy(renderer, Message, NULL, &Message_rect);
         //SDL_FreeSurface(surfaceMessage);
-        // SDL_DestroyTexture(Message);
+        //SDL_DestroyTexture(Message);
 
         /*
         SDL_Color White = {255, 255, 255};  
