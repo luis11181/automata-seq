@@ -75,7 +75,7 @@ int main(int argc, char **argv)
     	
     // load font.ttf at size 16 into font
     TTF_Font *font;
-    font=TTF_OpenFont("font.ttf", 16);
+    font=TTF_OpenFont("Sans.ttf", 16);
     if(!font) {
         printf("TTF_OpenFont: %s\n", TTF_GetError());
         // handle error
