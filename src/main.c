@@ -374,9 +374,9 @@ int main(int argc, char **argv)
         }
 
         SDL_Color White = {255, 255, 255};  
-        SDL_Surface* surfaceMessage = NULL;
+        SDL_Surface* surfaceMessage ;
         surfaceMessage = TTF_RenderText_Solid(font, 'ssss', White);
-        SDL_Texture* Message = NULL;
+        SDL_Texture* Message ;
         Message = SDL_CreateTextureFromSurface(renderer, surfaceMessage);
 
         SDL_Rect Message_rect;
