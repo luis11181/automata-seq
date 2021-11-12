@@ -286,22 +286,7 @@ int main(int argc, char **argv)
                         //perhaps we can reuse it, but I assume not for simplicity.
                        // SDL_FreeSurface(text_surface);
                     }
-                    
-
-
-                      
-                      SDL_Color white_font = { .r = 6, .g = 150, .b = 78 };
-                      //render text on screen with SDL with the element that is being drawn 
-                      SDL_Surface *surfaceMessage = TTF_RenderText_Solid(font, "FIRE", white_font); //
-                      SDL_Texture *Message = SDL_CreateTextureFromSurface(renderer, surfaceMessage); // now you can convert it into a texture
-                      SDL_Rect Message_rect;
-                      Message_rect.x = 0;
-                      Message_rect.y = 0;
-                      Message_rect.w = surfaceMessage->w;
-                      Message_rect.h = surfaceMessage->h;
-                      SDL_RenderCopy(renderer, Message, NULL, &Message_rect);
-                      //SDL_FreeSurface(surfaceMessage);
-                     // SDL_DestroyTexture(Message);
+                                        
                      */
                       
 
@@ -373,6 +358,23 @@ int main(int argc, char **argv)
                 break;
         }
 
+
+
+         
+        SDL_Color white_font = { .r = 6, .g = 150, .b = 78 };
+        //render text on screen with SDL with the element that is being drawn 
+        SDL_Surface *surfaceMessage = TTF_RenderText_Solid(font, "FIRE", white_font); //
+        SDL_Texture *Message = SDL_CreateTextureFromSurface(renderer, surfaceMessage); // now you can convert it into a texture
+        SDL_Rect Message_rect;
+        Message_rect.x = 0;
+        Message_rect.y = 0;
+        Message_rect.w = surfaceMessage->w;
+        Message_rect.h = surfaceMessage->h;
+        SDL_RenderCopy(renderer, Message, NULL, &Message_rect);
+        //SDL_FreeSurface(surfaceMessage);
+        // SDL_DestroyTexture(Message);
+
+        /*
         SDL_Color White = {255, 255, 255};  
         SDL_Surface* surfaceMessage ;
         surfaceMessage = TTF_RenderText_Solid(font, 'ssss', White);
@@ -387,6 +389,7 @@ int main(int argc, char **argv)
 
         //UPDATE/GAMELOOP AREA, I DIDN'T REALLY PASTE THE WHOLE PART
         SDL_RenderCopy(renderer, Message, NULL, &Message_rect);
+        */
 
         SDL_RenderPresent(renderer);
 
