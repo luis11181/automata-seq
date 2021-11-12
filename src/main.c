@@ -273,7 +273,7 @@ int main(int argc, char **argv)
                     // Render some text in solid black to a new surface
                     // then blit to the upper left of the screen
                     // then free the text surface
-                    //SDL_Surface *screen;
+                    SDL_Surface *screen;
                     SDL_Color color={252,150,17};
                     SDL_Surface *text_surface;
                     if(!(text_surface=TTF_RenderText_Solid(font,"Hello World!",color))) {
