@@ -66,7 +66,20 @@ int main(int argc, char **argv)
         return EXIT_FAILURE;
     }
 
-    TTF_Init();
+    //inicia ttf para los mensajes
+    if(TTF_Init()==-1) {
+        printf("TTF_Init: %s\n", TTF_GetError());
+        exit(2);
+    }
+
+    	
+    // load font.ttf at size 16 into font
+    TTF_Font *font;
+    font=TTF_OpenFont("font.ttf", 16);
+    if(!font) {
+        printf("TTF_OpenFont: %s\n", TTF_GetError());
+        // handle error
+    }
 
     SDL_Window *window = SDL_CreateWindow(running_title, SDL_WINDOWPOS_UNDEFINED,
                                                                                 SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH,
@@ -256,8 +269,22 @@ int main(int argc, char **argv)
                     
 
                     // codigo para imprimir el elemento que se esta usando al cambiarlo, no sirve pq no encuentra la libreria sdl_ttf.h,  aunque ya la instale e importe en el makefile
-                      
-                      TTF_Font* Sans =TTF_OpenFont("Sans.ttf", 20);
+ 	
+                    // Render some text in solid black to a new surface
+                    // then blit to the upper left of the screen
+                    // then free the text surface
+                    //SDL_Surface *screen;
+                    SDL_Color color={252,150,17};
+                    SDL_Surface *text_surface;
+                    if(!(text_surface=TTF_RenderText_Solid(font,"Hello World!",color))) {
+                        //handle error here, perhaps print TTF_GetError at least
+                    } else {
+                        SDL_BlitSurface(text_surface,NULL,screen,NULL);
+                        //perhaps we can reuse it, but I assume not for simplicity.
+                        SDL_FreeSurface(text_surface);
+                    }
+
+                      /*
                       SDL_Color white_font = { .r = 0, .g = 0, .b = 0 };
                       //render text on screen with SDL with the element that is being drawn 
                       SDL_Surface *surfaceMessage = TTF_RenderText_Solid(Sans, "FIRE", white_font); //
@@ -270,6 +297,7 @@ int main(int argc, char **argv)
                       SDL_RenderCopy(renderer, Message, NULL, &Message_rect);
                       SDL_FreeSurface(surfaceMessage);
                       SDL_DestroyTexture(Message);
+                      */
 
                     
                       
@@ -345,6 +373,7 @@ int main(int argc, char **argv)
 
     SDL_DestroyWindow(window);
     TTF_Quit();
+    // you could SDL_Quit(); here...or not.
     SDL_Quit();
 
     return EXIT_SUCCESS;
