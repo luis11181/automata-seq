@@ -252,7 +252,7 @@ int main(int argc, char **argv)
                     else if (event.key.keysym.sym == 'f' || event.key.keysym.sym == 'F') {
                       drawing_element = FIRE;
                     
-                    SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR,
+                    SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION,
                          "Missing file",
                          "File is missing. Please reinstall the program.",
                          NULL);
