@@ -9,6 +9,13 @@
 #define MOVES_PER_FRAME 1
 #define MOVES_PER_SECOND 20
 
+//number of threads maximum  we use to make the efficiency curves
+#define THREADS 16
+
+//* this two defines are to use the sys/time.h include , so they must be declared before, we can also declare them in the command line when running the code with -D_DEFAULT_SOURCE  -D_BSD_SOURCE
+#define _DEFAULT_SOURCE
+#define _BSD_SOURCE
+
 enum AUTOMATA {
     LANGTONS_ANT,
     GAME_OF_LIFE,

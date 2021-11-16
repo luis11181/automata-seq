@@ -35,6 +35,12 @@ void render_grid(SDL_Renderer *renderer, const state_t *state)
     struct timeval tval_before, tval_after, tval_result;
     gettimeofday(&tval_before, NULL);
 
+    //* posible for para hacer la curva de rendimiento con direfentes threads
+    //for (int j = 0; j < THREADS; j++)
+    //{
+
+    // #pragma omp parallel num_threads(threads)
+    
     for (int x = 0; x < N; x++)
         for (int y = 0; y < N; y++) {
             SDL_Rect rect = {
@@ -96,6 +102,9 @@ void render_grid(SDL_Renderer *renderer, const state_t *state)
       gettimeofday(&tval_after, NULL);
       timersub(&tval_after, &tval_before, &tval_result);
       printf("main for to render the grid, Time elapsed: %ld.%06ld\n", (long int)tval_result.tv_sec, (long int)tval_result.tv_usec);
+      printf("Thread: %d\n",  omp_get_thread_num());
+
+      //}
 
 }
 
@@ -414,14 +423,21 @@ bool sand_sim_mover_arriba_y_lados(state_t *state, short sustancia, bool seHaMov
 //***** world_sand_sim() RUNS THE SIMULATION logic for all elements of the world
 void world_sand_sim(SDL_Renderer *renderer, state_t *state)
 {
+
     if (state->mode == RUNNING_MODE){
-    for (int i = 0; i < MOVES_PER_FRAME; i++) {
+
+      //* posible for para hacer la curva de rendimiento con direfentes threads
+      //for (int j = 0; j < THREADS; j++)
+      //{
+
+      for (int i = 0; i < MOVES_PER_FRAME; i++) {
         //int new_board[N][N] = {state->board};
         bool seHaMovidoFlags[N][N] = {false};
 
         //*calculate time to render the grid
         struct timeval tval_before, tval_after, tval_result;
         gettimeofday(&tval_before, NULL);
+        //#pragma omp parallel num_threads(threads)
 
         for (int y = N-1; y >= 0; y--){
             for (int x = 0; x < N; x++) {
@@ -482,11 +498,14 @@ void world_sand_sim(SDL_Renderer *renderer, state_t *state)
                 }
 
             }
-        }     
+        }  
+        }    
         //*calculate time to render the grid
         gettimeofday(&tval_after, NULL);
         timersub(&tval_after, &tval_before, &tval_result);
         printf("void world_sand_sim function, Time elapsed: %ld.%06ld\n", (long int)tval_result.tv_sec, (long int)tval_result.tv_usec);   
+        printf("Thread: %d\n",  omp_get_thread_num());
+       //}
     }
-    }
+    
 }
