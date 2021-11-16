@@ -499,13 +499,13 @@ void world_sand_sim(SDL_Renderer *renderer, state_t *state)
 
             }
         }  
-        }    
+          
         //*calculate time to render the grid
         gettimeofday(&tval_after, NULL);
         timersub(&tval_after, &tval_before, &tval_result);
         printf("void world_sand_sim function, Time elapsed: %ld.%06ld\n", (long int)tval_result.tv_sec, (long int)tval_result.tv_usec);   
         printf("Thread: %d\n",  omp_get_thread_num());
        //}
-    }
+    }}  
     
 }
