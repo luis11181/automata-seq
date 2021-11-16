@@ -1,6 +1,7 @@
 #include <SDL2/SDL.h>
 #include <stdbool.h> 
 #include <stdlib.h>
+#include <sys/time.h>
 
 #include "logic.h"
 #include "render.h"
@@ -30,6 +31,10 @@ const SDL_Color ANT_COLOR = { .r = 255, .g = 50, .b = 50 };
 
 void render_grid(SDL_Renderer *renderer, const state_t *state)
 {
+    //*calculate time to render the grid
+    struct timeval tval_before, tval_after, tval_result;
+    gettimeofday(&tval_before, NULL);
+
     for (int x = 0; x < N; x++)
         for (int y = 0; y < N; y++) {
             SDL_Rect rect = {
@@ -86,6 +91,11 @@ void render_grid(SDL_Renderer *renderer, const state_t *state)
                 default: {}
             }
         }
+      
+      //*calculate time to render the grid
+      gettimeofday(&tval_after, NULL);
+      timersub(&tval_after, &tval_before, &tval_result);
+      printf("main for to render the grid, Time elapsed: %ld.%06ld\n", (long int)tval_result.tv_sec, (long int)tval_result.tv_usec);
 
 }
 
@@ -168,80 +178,6 @@ void game_of_life(SDL_Renderer *renderer, state_t *state)
     }
 }
 
-void brians_brain(SDL_Renderer *renderer, state_t *state)
-{
-    if (state->mode == RUNNING_MODE)
-    for (int i = 0; i < MOVES_PER_FRAME; i++) {
-        int new_board[N][N];
-
-        for (int x = 0; x < N; x++)
-            for (int y = 0; y < N; y++) {
-                int n_neigh =
-                    (state->board[mod((x - 1), N)][mod((y - 1), N)] == ON) +
-                    (state->board[mod((x    ), N)][mod((y - 1), N)] == ON) +
-                    (state->board[mod((x + 1), N)][mod((y - 1), N)] == ON) +
-                    (state->board[mod((x - 1), N)][mod((y    ), N)] == ON) +
-                    (state->board[mod((x + 1), N)][mod((y    ), N)] == ON) +
-                    (state->board[mod((x - 1), N)][mod((y + 1), N)] == ON) +
-                    (state->board[mod((x    ), N)][mod((y + 1), N)] == ON) +
-                    (state->board[mod((x + 1), N)][mod((y + 1), N)] == ON);
-
-                if (state->board[x][y] == OFF && n_neigh == 2)
-                    new_board[x][y] = ON;
-                else if (state->board[x][y] == ON)
-                    new_board[x][y] = DYING;
-                else
-                    new_board[x][y] = OFF;
-            }
-
-        for (int x = 0; x < N; x++)
-            for (int y = 0; y < N; y++)
-                state->board[x][y] = new_board[x][y];
-    }
-}
-
-void wireworld(SDL_Renderer *renderer, state_t *state)
-{
-    if (state->mode == RUNNING_MODE)
-    for (int i = 0; i < MOVES_PER_FRAME; i++) {
-        int new_board[N][N];
-
-        for (int x = 0; x < N; x++)
-            for (int y = 0; y < N; y++) {
-                int n_neigh =
-                    (state->board[mod((x - 1), N)][mod((y - 1), N)] == ELECTRON_HEAD) +
-                    (state->board[mod((x    ), N)][mod((y - 1), N)] == ELECTRON_HEAD) +
-                    (state->board[mod((x + 1), N)][mod((y - 1), N)] == ELECTRON_HEAD) +
-                    (state->board[mod((x - 1), N)][mod((y    ), N)] == ELECTRON_HEAD) +
-                    (state->board[mod((x + 1), N)][mod((y    ), N)] == ELECTRON_HEAD) +
-                    (state->board[mod((x - 1), N)][mod((y + 1), N)] == ELECTRON_HEAD) +
-                    (state->board[mod((x    ), N)][mod((y + 1), N)] == ELECTRON_HEAD) +
-                    (state->board[mod((x + 1), N)][mod((y + 1), N)] == ELECTRON_HEAD);
-
-                /* RULES
-                   - empty -> empty
-                   - electron head -> electron tail
-                   - electron tail -> conductor
-                   - conductor -> n_neigh = 1 or 2 ? electron head : conductor
-                 */
-
-                if (state->board[x][y] == EMPTY)
-                    new_board[x][y] = EMPTY;
-                else if (state->board[x][y] == ELECTRON_HEAD)
-                    new_board[x][y] = ELECTRON_TAIL;
-                else if (state->board[x][y] == ELECTRON_TAIL)
-                    new_board[x][y] = CONDUCTOR;
-                else if (state->board[x][y] == CONDUCTOR && (n_neigh == 1 || n_neigh == 2))
-                    new_board[x][y] = ELECTRON_HEAD;
-                else
-                    new_board[x][y] = CONDUCTOR;
-            }
-
-        for (int x = 0; x < N; x++)
-            for (int y = 0; y < N; y++)
-                state->board[x][y] = new_board[x][y];
-    }
-}
 
 ////////////////////////////////////////////////////////////////////////////////!!
 //SAND SIMULATION FUNCTIONS
@@ -483,7 +419,10 @@ void world_sand_sim(SDL_Renderer *renderer, state_t *state)
         //int new_board[N][N] = {state->board};
         bool seHaMovidoFlags[N][N] = {false};
 
-        
+        //*calculate time to render the grid
+        struct timeval tval_before, tval_after, tval_result;
+        gettimeofday(&tval_before, NULL);
+
         for (int y = N-1; y >= 0; y--){
             for (int x = 0; x < N; x++) {
                 
@@ -543,7 +482,11 @@ void world_sand_sim(SDL_Renderer *renderer, state_t *state)
                 }
 
             }
-        }        
+        }     
+        //*calculate time to render the grid
+        gettimeofday(&tval_after, NULL);
+        timersub(&tval_after, &tval_before, &tval_result);
+        printf("void world_sand_sim function, Time elapsed: %ld.%06ld\n", (long int)tval_result.tv_sec, (long int)tval_result.tv_usec);   
     }
     }
 }

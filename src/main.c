@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/time.h>
 #include <unistd.h>
 #include <stdbool.h> 
 #include <SDL2/SDL.h>
@@ -18,8 +19,6 @@ void print_usage()
     printf("Usage: ./automata AUTOMATA\n");
     printf("     Langton's ant           -> langton\n");
     printf("     Conway's Game of Life   -> gameoflife\n");
-    printf("     Brian's brain           -> briansbrain\n");
-    printf("     Wireworld               -> wireworld\n");
     printf("     Falling Sand Simulator  -> sandsim\n");
 }
 
@@ -40,14 +39,6 @@ int main(int argc, char **argv)
         automata = GAME_OF_LIFE;
         strncat(running_title, "THE GAME OF LIFE", 48);
         strncat(paused_title, "THE GAME OF LIFE", 48);
-    } else if (strcmp(argv[1], "briansbrain") == 0) {
-        automata = BRIANS_BRAIN;
-        strncat(running_title, "BRIAN'S BRAIN", 48);
-        strncat(paused_title, "BRIAN'S BRAIN", 48);
-    } else if (strcmp(argv[1], "wireworld") == 0) {
-        automata = WIREWORLD;
-        strncat(running_title, "WIREWORLD", 48);
-        strncat(paused_title, "WIREWORLD", 48);
     } else if (strcmp(argv[1], "sandsim") == 0) {
         automata = FALLING_SAND_SIM;
         strncat(running_title, "FALLING SAND SIMULATOR", 48);
@@ -200,12 +191,6 @@ int main(int argc, char **argv)
                         case GAME_OF_LIFE:
                             state.board[x][y] = (state.board[x][y] + 1) % 2;
                             break;
-                        case BRIANS_BRAIN:
-                            state.board[x][y] = (state.board[x][y] + 1) % 3;
-                            break;
-                        case WIREWORLD:
-                            state.board[x][y] = (state.board[x][y] + 1) % 4;
-                            break;
                         // USE MODULE 9 TO ONLY GET A NUMBER BETWEEN 0 AND 9 THAT ARE HE NUMBER OF COLORS
                         case FALLING_SAND_SIM:
                         // alter teh state of pixel with each click
@@ -222,9 +207,9 @@ int main(int argc, char **argv)
                               }
                            }}
                             
-                            break;
+                        break;
                     }
-                    break;
+                  break;
 
                 // if the click is pressed and there is movement the mouse will draw any picture
                 case SDL_MOUSEMOTION:
@@ -341,13 +326,6 @@ int main(int argc, char **argv)
                 game_of_life(renderer, &state);
                 break;
 
-            case BRIANS_BRAIN:
-                brians_brain(renderer, &state);
-                break;
-
-            case WIREWORLD:
-                wireworld(renderer, &state);
-                break;
             case FALLING_SAND_SIM:
                 world_sand_sim(renderer, &state);
                 break;
@@ -356,9 +334,9 @@ int main(int argc, char **argv)
 
 
          
-        SDL_Color white_font = { .r = 6, .g = 150, .b = 78 };
+        SDL_Color font_color = { .r = 6, .g = 150, .b = 78 };
         //render text on screen with SDL with the element that is being drawn 
-        SDL_Surface *surfaceMessage = TTF_RenderText_Solid(font, dest, white_font); //
+        SDL_Surface *surfaceMessage = TTF_RenderText_Solid(font, dest, font_color); //
         SDL_Texture *Message = SDL_CreateTextureFromSurface(renderer, surfaceMessage); // now you can convert it into a texture
         SDL_Rect Message_rect;
         Message_rect.x = 0;
@@ -368,23 +346,6 @@ int main(int argc, char **argv)
         SDL_RenderCopy(renderer, Message, NULL, &Message_rect);
         //SDL_FreeSurface(surfaceMessage);
         //SDL_DestroyTexture(Message);
-
-        /*
-        SDL_Color White = {255, 255, 255};  
-        SDL_Surface* surfaceMessage ;
-        surfaceMessage = TTF_RenderText_Solid(font, 'ssss', White);
-        SDL_Texture* Message ;
-        Message = SDL_CreateTextureFromSurface(renderer, surfaceMessage);
-
-        SDL_Rect Message_rect;
-        Message_rect.x = 0;
-        Message_rect.y = 0;
-        Message_rect.w = 100;
-        Message_rect.h = 100;
-
-        //UPDATE/GAMELOOP AREA, I DIDN'T REALLY PASTE THE WHOLE PART
-        SDL_RenderCopy(renderer, Message, NULL, &Message_rect);
-        */
 
         SDL_RenderPresent(renderer);
 

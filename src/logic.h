@@ -45,16 +45,6 @@ enum CELL {
 #define DEAD BLACK
 #define ALIVE WHITE
 
-//  Brian's brain poner nuestros cuadritos impresos donde se hace click
-#define OFF BLACK
-#define ON WHITE
-#define DYING BLUE
-
-// Wireworldd poner nuestros cuadritos impresos donde se hace click
-#define EMPTY BLACK
-#define CONDUCTOR WHITE
-#define ELECTRON_HEAD BLUE
-#define ELECTRON_TAIL RED
 
 // Falling sand simulator - materiales básicos
 #define AIR BLACK
