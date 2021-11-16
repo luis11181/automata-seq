@@ -22,7 +22,7 @@ jobs:
       - name: install ttf
         run: sudo apt-get install libsdl2-ttf-dev
       - name: install fonts
-        run: sudo apt-get ttf-ubuntu-font-family
+        run: sudo apt-get install ttf-ubuntu-font-family
       - name: make clean
         run: make clean
       - name: make all
