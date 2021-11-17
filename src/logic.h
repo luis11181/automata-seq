@@ -7,7 +7,7 @@
 #define CELL_WIDTH (SCREEN_WIDTH / N)
 #define CELL_HEIGHT (SCREEN_HEIGHT / N)
 #define MOVES_PER_FRAME 1
-#define MOVES_PER_SECOND 20
+#define MOVES_PER_SECOND 60
 
 //number of threads maximum  we use to make the efficiency curves
 #define THREADS 16

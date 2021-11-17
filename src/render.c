@@ -437,6 +437,7 @@ void world_sand_sim(SDL_Renderer *renderer, state_t *state)
         //*calculate time to render the grid
         struct timeval tval_before, tval_after, tval_result;
         gettimeofday(&tval_before, NULL);
+        
         //#pragma omp parallel num_threads(threads)
 
         for (int y = N-1; y >= 0; y--){
