@@ -1,5 +1,5 @@
 CC=gcc
-CFLAGS= -Wall `sdl2-config --cflags --libs` -fopenmp -lm #-c `sdl-config --cflags`
+CFLAGS= -Wall `sdl2-config --cflags --libs` -fopenmp -lm -D_DEFAULT_SOURCE  -D_BSD_SOURCE#-c `sdl-config --cflags`
 LDFLAGS=  -lSDL2 -lSDL2_ttf 
 
 SRC=$(wildcard src/*.c)
