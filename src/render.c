@@ -59,9 +59,9 @@ void render_grid(SDL_Renderer *renderer, const state_t *state)
     //for (int j = 0; j < THREADS; j++)
     //{
 
-    
-    #pragma omp parallel for num_threads(threads)
     {
+    #pragma omp parallel for num_threads(threads)
+    
       //#pragma omp for
       
       for (int x = 0; x < N; x++){
