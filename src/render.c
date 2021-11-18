@@ -9,7 +9,7 @@
 #include "render.h"
 #include "util.h"
 
-int threads=0;
+int threads=1;
 
 int mod(int a, int b)
 {
@@ -54,10 +54,11 @@ void render_grid(SDL_Renderer *renderer, const state_t *state)
     //for (int j = 0; j < THREADS; j++)
     //{
 
-    //#pragma omp parallel num_threads(threads) 
-
+    
+    #pragma omp parallel num_threads(threads) 
     {
-    //#pragma omp for
+    #pragma omp for
+    
     for (int x = 0; x < N; x++)
         for (int y = 0; y < N; y++) {
             SDL_Rect rect = {
