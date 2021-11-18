@@ -119,7 +119,8 @@ void render_grid(SDL_Renderer *renderer, const state_t *state)
     }
 
     char str[128];
-    sprintf(str, "main for to render the grid, Thread: %d, FPS: %d , Time elapsed (s): %ld.%06ld", 
+    sprintf(str, "main for to render the grid, #of threads:%d , Thread: %d, FPS: %d , Time elapsed (s): %ld.%06ld", 
+     omp_get_num_threads(),
         omp_get_thread_num(), 
         fps_render_grid, 
         (long int)tval_result.tv_sec, 
@@ -446,6 +447,7 @@ bool sand_sim_mover_arriba_y_lados(state_t *state, short sustancia, bool seHaMov
 
 
 int fps_sandsim_cnt = 0;
+int thread_sandsim_cnt = 0;
 int fps_sandsim = 0;
 
 //***** world_sand_sim() RUNS THE SIMULATION logic for all elements of the world
@@ -457,6 +459,8 @@ void world_sand_sim(SDL_Renderer *renderer, state_t *state)
       //* posible for para hacer la curva de rendimiento con direfentes threads
       //for (int j = 0; j < THREADS; j++)
       //{
+
+        
 
       for (int i = 0; i < MOVES_PER_FRAME; i++) {
         //int new_board[N][N] = {state->board};
@@ -531,6 +535,7 @@ void world_sand_sim(SDL_Renderer *renderer, state_t *state)
           
         //*calculate time to render the grid
         gettimeofday(&tval_after, NULL);
+
         timersub(&tval_after, &tval_before, &tval_result);
 
         //Calculo FPS
@@ -539,12 +544,14 @@ void world_sand_sim(SDL_Renderer *renderer, state_t *state)
             fps_sandsim = fps_sandsim_cnt; //Capturar cuantas veces se ha ejecutado esta funcion
             fps_sandsim_cnt = 0; //Reiniciar la cuenta
             resetTimer(TVAL_SANDSIM); //Actualizar timer
+
         } else{  //Si no ha pasado el segundo
             ++fps_sandsim_cnt; //Ir sumando los frames
         }
 
+
         char str[128];
-        sprintf(str, "void world_sand_sim function, Thread: %d, FPS: %d , Time elapsed (s): %ld.%06ld", 
+        sprintf(str, "void world_sand_sim function, # Of threads:%d , Thread: %d, FPS: %d , Time elapsed (s): %ld.%06ld", omp_get_num_threads(),
             omp_get_thread_num(), 
             fps_sandsim, 
             (long int)tval_result.tv_sec, 

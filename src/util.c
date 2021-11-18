@@ -5,7 +5,7 @@
 #include "util.h"
 
 //Timers
-struct timeval tval_start, tval_render_grid, tval_sandsim;
+struct timeval tval_start, tval_render_grid, tval_sandsim, tval_threads_rendergrid, tval_threads_sandsim;
 
 //Fuentes
 TTF_Font *cfont;
@@ -68,6 +68,8 @@ void startUtilTimers(){
   resetTimer(TVAL_START);
   resetTimer(TVAL_RENDER_GRID);
   resetTimer(TVAL_SANDSIM);
+  resetTimer(TVAL_THREADS_SANDSIM);
+  resetTimer(TVAL_THREADS_RENDERGRID);
 }
 
 long int getTimerS(int timer){
@@ -79,6 +81,10 @@ long int getTimerS(int timer){
     return (long int) tval_render_grid.tv_sec;
   case TVAL_SANDSIM:
     return (long int) tval_sandsim.tv_sec;
+  case TVAL_THREADS_SANDSIM:
+    return (long int) tval_threads_sandsim.tv_sec;
+  case TVAL_THREADS_RENDERGRID:
+    return (long int) tval_threads_rendergrid.tv_sec;
   default:
     break;
   }
@@ -94,6 +100,10 @@ long int getTimerMS(int timer){
     return (long int) tval_render_grid.tv_usec;
   case TVAL_SANDSIM:
     return (long int) tval_sandsim.tv_usec;
+  case TVAL_THREADS_SANDSIM:
+    return (long int)tval_threads_sandsim.tv_usec;
+  case TVAL_THREADS_RENDERGRID:
+    return (long int) tval_threads_rendergrid.tv_usec;
   default:
     break;
   }
@@ -111,6 +121,12 @@ void resetTimer(int timer){
     break;
   case TVAL_SANDSIM:
     gettimeofday(&tval_sandsim, NULL);
+    break;
+  case TVAL_THREADS_SANDSIM:
+    gettimeofday(&tval_threads_sandsim, NULL);
+    break;
+  case TVAL_THREADS_RENDERGRID:
+    gettimeofday(&tval_threads_rendergrid, NULL);
     break;
   default:
     break;
