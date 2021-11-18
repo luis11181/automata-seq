@@ -57,89 +57,90 @@ void render_grid(SDL_Renderer *renderer, const state_t *state)
     
     #pragma omp parallel num_threads(threads) 
     {
-    #pragma omp for
-    
-    for (int x = 0; x < N; x++)
-        for (int y = 0; y < N; y++) {
-            SDL_Rect rect = {
-                .x = x * CELL_WIDTH,
-                .y = y * CELL_HEIGHT,
-                .w = CELL_WIDTH,
-                .h = CELL_HEIGHT
-            };
+      #pragma omp for
+      
+      for (int x = 0; x < N; x++){
+          for (int y = 0; y < N; y++) {
+              SDL_Rect rect = {
+                  .x = x * CELL_WIDTH,
+                  .y = y * CELL_HEIGHT,
+                  .w = CELL_WIDTH,
+                  .h = CELL_HEIGHT
+              };
 
-            switch(state->board[x][y]) {
-                case BLACK:
-                    SDL_SetRenderDrawColor(renderer, BLACK_CELL_COLOR.r, BLACK_CELL_COLOR.g, BLACK_CELL_COLOR.b, 255);
-                    SDL_RenderFillRect(renderer, &rect);
-                    break;
+              switch(state->board[x][y]) {
+                  case BLACK:
+                      SDL_SetRenderDrawColor(renderer, BLACK_CELL_COLOR.r, BLACK_CELL_COLOR.g, BLACK_CELL_COLOR.b, 255);
+                      SDL_RenderFillRect(renderer, &rect);
+                      break;
 
-                case BLUE:
-                    SDL_SetRenderDrawColor(renderer, BLUE_CELL_COLOR.r, BLUE_CELL_COLOR.g, BLUE_CELL_COLOR.b, 255);
-                    SDL_RenderFillRect(renderer, &rect);
-                    break;
+                  case BLUE:
+                      SDL_SetRenderDrawColor(renderer, BLUE_CELL_COLOR.r, BLUE_CELL_COLOR.g, BLUE_CELL_COLOR.b, 255);
+                      SDL_RenderFillRect(renderer, &rect);
+                      break;
 
-                case RED:
-                    SDL_SetRenderDrawColor(renderer, RED_CELL_COLOR.r, RED_CELL_COLOR.g, RED_CELL_COLOR.b, 255);
-                    SDL_RenderFillRect(renderer, &rect);
-                    break;
-                case GRAY:
-                    SDL_SetRenderDrawColor(renderer, GRAY_CELL_COLOR.r, GRAY_CELL_COLOR.g, GRAY_CELL_COLOR.b, 255);
-                    SDL_RenderFillRect(renderer, &rect);
-                    break;
-                case YELLOW:
-                    SDL_SetRenderDrawColor(renderer, YELLOW_CELL_COLOR.r, YELLOW_CELL_COLOR.g, YELLOW_CELL_COLOR.b, 255);
-                    SDL_RenderFillRect(renderer, &rect);
-                    break;
-                case WHITEBLUE:
-                    SDL_SetRenderDrawColor(renderer, WHITEBLUE_CELL_COLOR.r, WHITEBLUE_CELL_COLOR.g, WHITEBLUE_CELL_COLOR.b, 255);
-                    SDL_RenderFillRect(renderer, &rect);
-                    break;
-                case GREEN:
-                    SDL_SetRenderDrawColor(renderer, GREEN_CELL_COLOR.r, GREEN_CELL_COLOR.g, GREEN_CELL_COLOR.b, 255);
-                    SDL_RenderFillRect(renderer, &rect);
-                    break;
-                   
-                case PURPLE:
-                    SDL_SetRenderDrawColor(renderer, PURPLE_CELL_COLOR.r, PURPLE_CELL_COLOR.g, PURPLE_CELL_COLOR.b, 255);
-                    SDL_RenderFillRect(renderer, &rect);
-                    break;
-                case GRAYSMOKE:
-                    SDL_SetRenderDrawColor(renderer, GRAYSMOKE_CELL_COLOR.r, GRAYSMOKE_CELL_COLOR.g, GRAYSMOKE_CELL_COLOR.b, 255);
-                    SDL_RenderFillRect(renderer, &rect);
-                    break;
-                case STRUCTURE:
-                    SDL_SetRenderDrawColor(renderer, STRUCTURE_CELL_COLOR.r, STRUCTURE_CELL_COLOR.g, STRUCTURE_CELL_COLOR.b, 255);
-                    SDL_RenderFillRect(renderer, &rect);
-                    break;
-                default: {}
-            }
+                  case RED:
+                      SDL_SetRenderDrawColor(renderer, RED_CELL_COLOR.r, RED_CELL_COLOR.g, RED_CELL_COLOR.b, 255);
+                      SDL_RenderFillRect(renderer, &rect);
+                      break;
+                  case GRAY:
+                      SDL_SetRenderDrawColor(renderer, GRAY_CELL_COLOR.r, GRAY_CELL_COLOR.g, GRAY_CELL_COLOR.b, 255);
+                      SDL_RenderFillRect(renderer, &rect);
+                      break;
+                  case YELLOW:
+                      SDL_SetRenderDrawColor(renderer, YELLOW_CELL_COLOR.r, YELLOW_CELL_COLOR.g, YELLOW_CELL_COLOR.b, 255);
+                      SDL_RenderFillRect(renderer, &rect);
+                      break;
+                  case WHITEBLUE:
+                      SDL_SetRenderDrawColor(renderer, WHITEBLUE_CELL_COLOR.r, WHITEBLUE_CELL_COLOR.g, WHITEBLUE_CELL_COLOR.b, 255);
+                      SDL_RenderFillRect(renderer, &rect);
+                      break;
+                  case GREEN:
+                      SDL_SetRenderDrawColor(renderer, GREEN_CELL_COLOR.r, GREEN_CELL_COLOR.g, GREEN_CELL_COLOR.b, 255);
+                      SDL_RenderFillRect(renderer, &rect);
+                      break;
+                    
+                  case PURPLE:
+                      SDL_SetRenderDrawColor(renderer, PURPLE_CELL_COLOR.r, PURPLE_CELL_COLOR.g, PURPLE_CELL_COLOR.b, 255);
+                      SDL_RenderFillRect(renderer, &rect);
+                      break;
+                  case GRAYSMOKE:
+                      SDL_SetRenderDrawColor(renderer, GRAYSMOKE_CELL_COLOR.r, GRAYSMOKE_CELL_COLOR.g, GRAYSMOKE_CELL_COLOR.b, 255);
+                      SDL_RenderFillRect(renderer, &rect);
+                      break;
+                  case STRUCTURE:
+                      SDL_SetRenderDrawColor(renderer, STRUCTURE_CELL_COLOR.r, STRUCTURE_CELL_COLOR.g, STRUCTURE_CELL_COLOR.b, 255);
+                      SDL_RenderFillRect(renderer, &rect);
+                      break;
+                  default: {}
+              }
+          }}
+
+
+        //*calculate time to render the grid
+        gettimeofday(&tval_after, NULL);
+        timersub(&tval_after, &tval_before, &tval_result);
+        
+        //Calculo FPS
+        //Si ha pasado un segundo desde la ultima medicion
+        if((tval_after.tv_sec - getTimerS(TVAL_RENDER_GRID)) != 0){
+            fps_render_grid = fps_render_grid_cnt; //Capturar cuantas veces se ha ejecutado esta funcion
+            fps_render_grid_cnt = 0; //Reiniciar la cuenta
+            resetTimer(TVAL_RENDER_GRID); //Actualizar timer
+        } else{  //Si no ha pasado el segundo
+            ++fps_render_grid_cnt; //Ir sumando los frames
         }
 
-    }
-      
-      //*calculate time to render the grid
-      gettimeofday(&tval_after, NULL);
-      timersub(&tval_after, &tval_before, &tval_result);
-    
-    //Calculo FPS
-    //Si ha pasado un segundo desde la ultima medicion
-    if((tval_after.tv_sec - getTimerS(TVAL_RENDER_GRID)) != 0){
-        fps_render_grid = fps_render_grid_cnt; //Capturar cuantas veces se ha ejecutado esta funcion
-        fps_render_grid_cnt = 0; //Reiniciar la cuenta
-        resetTimer(TVAL_RENDER_GRID); //Actualizar timer
-    } else{  //Si no ha pasado el segundo
-        ++fps_render_grid_cnt; //Ir sumando los frames
-    }
+        char str[128];
+        sprintf(str, "main for to render the grid, #of threads:%d , Thread: %d, FPS: %d , Time elapsed (s): %ld.%06ld", 
+        omp_get_num_threads(),
+            omp_get_thread_num(), 
+            fps_render_grid, 
+            (long int)tval_result.tv_sec, 
+            (long int)tval_result.tv_usec);
+        renderFormattedText(renderer, str, 0 , 20);
 
-    char str[128];
-    sprintf(str, "main for to render the grid, #of threads:%d , Thread: %d, FPS: %d , Time elapsed (s): %ld.%06ld", 
-     omp_get_num_threads(),
-        omp_get_thread_num(), 
-        fps_render_grid, 
-        (long int)tval_result.tv_sec, 
-        (long int)tval_result.tv_usec);
-    renderFormattedText(renderer, str, 0 , 20);
+    }
     
     //printf("%d, %ld, %d\n",counter,(long int)tval_result.tv_sec, tval_result.tv_sec != 0);
     
