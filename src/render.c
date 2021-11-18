@@ -9,6 +9,8 @@
 #include "render.h"
 #include "util.h"
 
+int threads=0;
+
 int mod(int a, int b)
 {
     int r = a % b;
@@ -41,12 +43,21 @@ void render_grid(SDL_Renderer *renderer, const state_t *state)
     
     gettimeofday(&tval_before, NULL);
 
+    //Change thread number every 5 seconds and check if threads are less than the maximum
+    if(( getTimerS(TVAL_THREADS_SANDSIM)<5) && (threads <= THREADS)){
+        
+        threads ++; //aumenta # threads
+        resetTimer(TVAL_THREADS_SANDSIM); //Actualizar timer
+    }
+
     //* posible for para hacer la curva de rendimiento con direfentes threads
     //for (int j = 0; j < THREADS; j++)
     //{
 
-    // #pragma omp parallel num_threads(threads)
-    
+    #pragma omp parallel num_threads(threads) 
+
+    {
+    #pragma omp for
     for (int x = 0; x < N; x++)
         for (int y = 0; y < N; y++) {
             SDL_Rect rect = {
@@ -103,6 +114,8 @@ void render_grid(SDL_Renderer *renderer, const state_t *state)
                 default: {}
             }
         }
+
+    }
       
       //*calculate time to render the grid
       gettimeofday(&tval_after, NULL);
@@ -548,7 +561,6 @@ void world_sand_sim(SDL_Renderer *renderer, state_t *state)
         } else{  //Si no ha pasado el segundo
             ++fps_sandsim_cnt; //Ir sumando los frames
         }
-
 
         char str[128];
         sprintf(str, "void world_sand_sim function, # Of threads:%d , Thread: %d, FPS: %d , Time elapsed (s): %ld.%06ld", omp_get_num_threads(),
