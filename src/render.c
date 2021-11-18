@@ -50,7 +50,9 @@ void render_grid(SDL_Renderer *renderer, const state_t *state)
         resetTimer(TVAL_THREADS_SANDSIM); //Actualizar timer
         //print timer for debug and threads variable to console
         
-        SDL_Log("Threads: %d\n, timer %ld", threads, getTimerS(TVAL_THREADS_SANDSIM));
+        char str[128];
+        sprintf(str, "Threads: %d\n, timer %ld", threads, getTimerS(TVAL_THREADS_SANDSIM));
+        renderFormattedText(renderer, str, 0 , 100);
     }
 
 
