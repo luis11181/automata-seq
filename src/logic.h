@@ -1,13 +1,13 @@
 #ifndef LOGIC_H_
 #define LOGIC_H_
 
-#define N 300
+#define N 200
 #define SCREEN_WIDTH 800.0
 #define SCREEN_HEIGHT 800.0
 #define CELL_WIDTH (SCREEN_WIDTH / N)
 #define CELL_HEIGHT (SCREEN_HEIGHT / N)
 #define MOVES_PER_FRAME 1
-#define MOVES_PER_SECOND 60
+#define MOVES_PER_SECOND 40
 
 //number of threads maximum  we use to make the efficiency curves
 #define THREADS 16
