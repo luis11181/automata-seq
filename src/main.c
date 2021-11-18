@@ -34,6 +34,10 @@ int main(int argc, char **argv)
     char running_title[64] = {'\0'};
     char paused_title[64] = {'\0'};
 
+    //Funciones de util.c
+    startUtilTimers();
+    //initUtilFonts();
+
     if (argc < 2) {
         print_usage();
         return EXIT_FAILURE;
@@ -354,21 +358,9 @@ int main(int argc, char **argv)
                 break;
         }
 
-
-
-         
-        SDL_Color font_color = { .r = 6, .g = 150, .b = 78 };
-        //render text on screen with SDL with the element that is being drawn 
-        SDL_Surface *surfaceMessage = TTF_RenderText_Solid(font, dest, font_color); //
-        SDL_Texture *Message = SDL_CreateTextureFromSurface(renderer, surfaceMessage); // now you can convert it into a texture
-        SDL_Rect Message_rect;
-        Message_rect.x = 0;
-        Message_rect.y = 0;
-        Message_rect.w = surfaceMessage->w;
-        Message_rect.h = surfaceMessage->h;
-        SDL_RenderCopy(renderer, Message, NULL, &Message_rect);
-        //SDL_FreeSurface(surfaceMessage);
-        //SDL_DestroyTexture(Message);
+        //Función para imprimir un texto indicando la fuente, posición y color de la fuente
+        //renderText(SDL_Renderer *renderer, TTF_Font *font, int r, int g, int b, char stringText[], int x, int y){
+        renderText(renderer,font, 6, 150, 78, dest, 0, 0);
 
         SDL_RenderPresent(renderer);
 
