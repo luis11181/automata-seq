@@ -60,9 +60,9 @@ void render_grid(SDL_Renderer *renderer, const state_t *state)
     //{
 
     
-    #pragma omp parallel num_threads(threads) 
+    #pragma omp parallel for num_threads(threads)
     {
-      #pragma omp for
+      //#pragma omp for
       
       for (int x = 0; x < N; x++){
           for (int y = 0; y < N; y++) {
@@ -120,7 +120,7 @@ void render_grid(SDL_Renderer *renderer, const state_t *state)
                   default: {}
               }
           }}
-}
+
 
         //*calculate time to render the grid
         gettimeofday(&tval_after, NULL);
@@ -145,7 +145,7 @@ void render_grid(SDL_Renderer *renderer, const state_t *state)
             (long int)tval_result.tv_usec);
         renderFormattedText(renderer, str, 0 , 20);
 
-    
+    }
     
     //printf("%d, %ld, %d\n",counter,(long int)tval_result.tv_sec, tval_result.tv_sec != 0);
     
