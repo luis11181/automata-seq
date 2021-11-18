@@ -1,10 +1,13 @@
 #include <SDL2/SDL.h>
+#include "/usr/include/SDL2/SDL_ttf.h"
 #include <stdbool.h> 
+#include <string.h>
 #include <stdlib.h>
 #include <sys/time.h>
 
 #include "logic.h"
 #include "render.h"
+#include "util.h"
 
 int mod(int a, int b)
 {
@@ -25,14 +28,17 @@ const SDL_Color GREEN_CELL_COLOR = { .r = 0, .g = 255, .b = 0 };
 const SDL_Color WHITEBLUE_CELL_COLOR = { .r = 176, .g = 241, .b = 247 };
 const SDL_Color GRAYSMOKE_CELL_COLOR = { .r = 176, .g = 176, .b = 176 };
 const SDL_Color STRUCTURE_CELL_COLOR = { .r = 67, .g = 59, .b = 27 };
-
-
 const SDL_Color ANT_COLOR = { .r = 255, .g = 50, .b = 50 };
+
+
+int fps_render_grid_cnt = 0;
+int fps_render_grid = 0;
 
 void render_grid(SDL_Renderer *renderer, const state_t *state)
 {
     //*calculate time to render the grid
     struct timeval tval_before, tval_after, tval_result;
+    
     gettimeofday(&tval_before, NULL);
 
     //* posible for para hacer la curva de rendimiento con direfentes threads
@@ -101,8 +107,27 @@ void render_grid(SDL_Renderer *renderer, const state_t *state)
       //*calculate time to render the grid
       gettimeofday(&tval_after, NULL);
       timersub(&tval_after, &tval_before, &tval_result);
-      printf("main for to render the grid, Time elapsed: %ld.%06ld\n", (long int)tval_result.tv_sec, (long int)tval_result.tv_usec);
-      printf("Thread: %d\n",  omp_get_thread_num());
+    
+    //Calculo FPS
+    //Si ha pasado un segundo desde la ultima medicion
+    if((tval_after.tv_sec - getTimerS(TVAL_RENDER_GRID)) != 0){
+        fps_render_grid = fps_render_grid_cnt; //Capturar cuantas veces se ha ejecutado esta funcion
+        fps_render_grid_cnt = 0; //Reiniciar la cuenta
+        resetTimer(TVAL_RENDER_GRID); //Actualizar timer
+    } else{  //Si no ha pasado el segundo
+        ++fps_render_grid_cnt; //Ir sumando los frames
+    }
+
+    char str[128];
+    sprintf(str, "main for to render the grid, Thread: %d, FPS: %d , Time elapsed (s): %ld.%06ld", 
+        omp_get_thread_num(), 
+        fps_render_grid, 
+        (long int)tval_result.tv_sec, 
+        (long int)tval_result.tv_usec);
+    renderFormattedText(renderer, str, 0 , 20);
+    
+    //printf("%d, %ld, %d\n",counter,(long int)tval_result.tv_sec, tval_result.tv_sec != 0);
+    
 
       //}
 
@@ -420,6 +445,9 @@ bool sand_sim_mover_arriba_y_lados(state_t *state, short sustancia, bool seHaMov
 }
 
 
+int fps_sandsim_cnt = 0;
+int fps_sandsim = 0;
+
 //***** world_sand_sim() RUNS THE SIMULATION logic for all elements of the world
 void world_sand_sim(SDL_Renderer *renderer, state_t *state)
 {
@@ -504,8 +532,25 @@ void world_sand_sim(SDL_Renderer *renderer, state_t *state)
         //*calculate time to render the grid
         gettimeofday(&tval_after, NULL);
         timersub(&tval_after, &tval_before, &tval_result);
-        printf("void world_sand_sim function, Time elapsed: %ld.%06ld\n", (long int)tval_result.tv_sec, (long int)tval_result.tv_usec);   
-        printf("Thread: %d\n",  omp_get_thread_num());
+
+        //Calculo FPS
+        //Si ha pasado un segundo desde la ultima medicion
+        if((tval_after.tv_sec - getTimerS(TVAL_SANDSIM)) != 0){
+            fps_sandsim = fps_sandsim_cnt; //Capturar cuantas veces se ha ejecutado esta funcion
+            fps_sandsim_cnt = 0; //Reiniciar la cuenta
+            resetTimer(TVAL_SANDSIM); //Actualizar timer
+        } else{  //Si no ha pasado el segundo
+            ++fps_sandsim_cnt; //Ir sumando los frames
+        }
+
+        char str[128];
+        sprintf(str, "void world_sand_sim function, Thread: %d, FPS: %d , Time elapsed (s): %ld.%06ld", 
+            omp_get_thread_num(), 
+            fps_sandsim, 
+            (long int)tval_result.tv_sec, 
+            (long int)tval_result.tv_usec);
+        renderFormattedText(renderer, str, 0 , 40);
+
        //}
     }}  
     
