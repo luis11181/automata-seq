@@ -52,7 +52,7 @@ void render_grid(SDL_Renderer *renderer, const state_t *state)
                
     }
 
-    printf("Threads: %d\n, timer %ld", threads, getTimerS(TVAL_THREADS_SANDSIM))
+    printf("Threads: %d\n, timer %ld", threads, getTimerS(TVAL_THREADS_SANDSIM));
     SDL_Log("Threads: %d\n, timer %ld", threads, getTimerS(TVAL_THREADS_SANDSIM));
         
 
