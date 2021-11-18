@@ -50,8 +50,9 @@ void render_grid(SDL_Renderer *renderer, const state_t *state)
         resetTimer(TVAL_THREADS_SANDSIM); //Actualizar timer
         //print timer for debug and threads variable to console
         
-        printf( "Threads: %d\n, timer %ld", threads, getTimerS(TVAL_THREADS_SANDSIM));
+        SDL_Log("Threads: %d\n, timer %ld", threads, getTimerS(TVAL_THREADS_SANDSIM));
     }
+
 
     //* posible for para hacer la curva de rendimiento con direfentes threads
     //for (int j = 0; j < THREADS; j++)
