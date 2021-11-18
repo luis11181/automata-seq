@@ -44,7 +44,7 @@ void render_grid(SDL_Renderer *renderer, const state_t *state)
     gettimeofday(&tval_before, NULL);
 
     //Change thread number every 5 seconds and check if threads are less than the maximum
-    if(( getTimerS(TVAL_THREADS_SANDSIM)<5) && (threads <= THREADS)){
+    if(( getTimerS(TVAL_THREADS_SANDSIM)>3) && (threads <= THREADS)){
         
         threads ++; //aumenta # threads
         resetTimer(TVAL_THREADS_SANDSIM); //Actualizar timer
@@ -52,7 +52,6 @@ void render_grid(SDL_Renderer *renderer, const state_t *state)
                
     }
 
-    printf("Threads: %d\n, timer %ld", threads, getTimerS(TVAL_THREADS_SANDSIM));
     SDL_Log("Threads: %d\n, timer %ld", threads, getTimerS(TVAL_THREADS_SANDSIM));
         
 
