@@ -43,8 +43,8 @@ void render_grid(SDL_Renderer *renderer, const state_t *state)
     
     gettimeofday(&tval_before, NULL);
 
-    //Change thread number every 5 seconds and check if threads are less than the maximum
-    if(( getTimerS(TVAL_THREADS_SANDSIM)>3) && (threads <= THREADS)){
+    //* Change thread number every 5 seconds and check if threads are less than the maximum of threads, so we can see the FPS for each number of threads
+    if(( getTimerS(TVAL_THREADS_SANDSIM)>) && (threads <= THREADS)){
         
         threads ++; //aumenta # threads
         resetTimer(TVAL_THREADS_SANDSIM); //Actualizar timer
@@ -53,16 +53,10 @@ void render_grid(SDL_Renderer *renderer, const state_t *state)
     }
 
     SDL_Log("Threads: %d\n, timer %ld", threads, getTimerS(TVAL_THREADS_SANDSIM));
-        
 
-    //* posible for para hacer la curva de rendimiento con direfentes threads
-    //for (int j = 0; j < THREADS; j++)
-    //{
-
-    {
-    #pragma omp parallel for collapse(2) num_threads(threads)
     
-      //#pragma omp for
+    {
+      //  #pragma omp parallel for collapse(2) num_threads(threads)
       
       for (int x = 0; x < N; x++){
           for (int y = 0; y < N; y++) {
@@ -481,7 +475,6 @@ void world_sand_sim(SDL_Renderer *renderer, state_t *state)
       //{
 
         
-
       for (int i = 0; i < MOVES_PER_FRAME; i++) {
         //int new_board[N][N] = {state->board};
         bool seHaMovidoFlags[N][N] = {false};
@@ -490,8 +483,10 @@ void world_sand_sim(SDL_Renderer *renderer, state_t *state)
         struct timeval tval_before, tval_after, tval_result;
         gettimeofday(&tval_before, NULL);
         
-        //#pragma omp parallel num_threads(threads)
-
+        
+        #pragma omp parallel num_threads(threads) 
+          {
+            #pragma omp for
         for (int y = N-1; y >= 0; y--){
             for (int x = 0; x < N; x++) {
                 
@@ -552,6 +547,8 @@ void world_sand_sim(SDL_Renderer *renderer, state_t *state)
 
             }
         }  
+
+          }
           
         //*calculate time to render the grid
         gettimeofday(&tval_after, NULL);
@@ -578,6 +575,7 @@ void world_sand_sim(SDL_Renderer *renderer, state_t *state)
         renderFormattedText(renderer, str, 0 , 40);
 
        //}
-    }}  
+    }
+    }  
     
 }
