@@ -329,21 +329,6 @@ int main(int argc, char **argv)
             usleep((1.0 / MOVES_PER_SECOND) * SECONDS_TO_MICROSECONDS);
 
 
-        //**calculate frame rate
-        
-        if (frame_count % MOVES_PER_SECOND == 0) {
-            gettimeofday(&tval_before, NULL);
-            timersub(&tval_after, &tval_before, &tval_result);
-            printf("time it took to make 60 frames: %ld.%06ld\n", (long int)tval_result.tv_sec, (long int)tval_result.tv_usec);  
-            //print the frame rate
-            printf("frames per second: %f\n", 1.0 / (long int)tval_result.tv_sec+ (long int)tval_result.tv_usec/1000000.0);
-            frame_count++;
-        }
-
-        gettimeofday(&tval_after, NULL);
-        
-        //// frame rate
-
         switch (automata) {
             case LANGTONS_ANT:
                 langtons_ant(renderer, &state);
