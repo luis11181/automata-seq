@@ -60,7 +60,7 @@ void render_grid(SDL_Renderer *renderer, const state_t *state)
     //{
 
     {
-    #pragma omp parallel for num_threads(threads)
+    #pragma omp parallel for collapse(2) num_threads(threads)
     
       //#pragma omp for
       
