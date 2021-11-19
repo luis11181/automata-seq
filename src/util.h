@@ -6,8 +6,8 @@ enum TIMER {
     TVAL_START,
     TVAL_RENDER_GRID,
     TVAL_SANDSIM,
-    TVAL_THREADS_SANDSIM,
-    TVAL_THREADS_RENDERGRID
+    tval_threads_2,
+    tval_threads_1
 };
 
 //util function to do simple things

@@ -9,7 +9,6 @@
 #include "render.h"
 #include "util.h"
 
-int threads=1;
 
 int mod(int a, int b)
 {
@@ -36,6 +35,10 @@ const SDL_Color ANT_COLOR = { .r = 255, .g = 50, .b = 50 };
 int fps_render_grid_cnt = 0;
 int fps_render_grid = 0;
 
+//timer to count 5 seconds to change the number of threads
+int threads=1;
+resetTimer(tval_threads_1)
+
 void render_grid(SDL_Renderer *renderer, const state_t *state)
 {
     //*calculate time to render the grid
@@ -44,15 +47,17 @@ void render_grid(SDL_Renderer *renderer, const state_t *state)
     gettimeofday(&tval_before, NULL);
 
     //* Change thread number every 5 seconds and check if threads are less than the maximum of threads, so we can see the FPS for each number of threads
-    if(( getTimerS(TVAL_THREADS_SANDSIM)>4) && (threads <= THREADS)){
+
+    resetTimer(tval_threads_2); //Actualizar timer
+    
+    if(( getTimerS(tval_threads_2)-getTimerS(tval_threads_1)>4) && (threads <= THREADS)){
         
         threads ++; //aumenta # threads
-        resetTimer(TVAL_THREADS_SANDSIM); //Actualizar timer
-        //print timer for debug and threads variable to console
+        resetTimer(tval_threads_2); //Actualizar timer
+        resetTimer(tval_threads_1); //Actualizar timer
+        SDL_Log("Threads: %d\n, timer %ld", threads, getTimerS(tval_threads_2));
                
     }
-
-    SDL_Log("Threads: %d\n, timer %ld", threads, getTimerS(TVAL_THREADS_SANDSIM));
 
     
     {

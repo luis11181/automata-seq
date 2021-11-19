@@ -5,7 +5,7 @@
 #include "util.h"
 
 //Timers
-struct timeval tval_start, tval_render_grid, tval_sandsim, tval_threads_rendergrid, tval_threads_sandsim;
+struct timeval tval_start, tval_render_grid, tval_sandsim, tval_threads_1, tval_threads_2;
 
 //Fuentes
 TTF_Font *cfont;
@@ -68,8 +68,8 @@ void startUtilTimers(){
   resetTimer(TVAL_START);
   resetTimer(TVAL_RENDER_GRID);
   resetTimer(TVAL_SANDSIM);
-  resetTimer(TVAL_THREADS_SANDSIM);
-  resetTimer(TVAL_THREADS_RENDERGRID);
+  resetTimer(tval_threads_2);
+  resetTimer(tval_threads_1);
 }
 
 long int getTimerS(int timer){
@@ -81,10 +81,10 @@ long int getTimerS(int timer){
     return (long int) tval_render_grid.tv_sec;
   case TVAL_SANDSIM:
     return (long int) tval_sandsim.tv_sec;
-  case TVAL_THREADS_SANDSIM:
-    return (long int) tval_threads_sandsim.tv_sec;
-  case TVAL_THREADS_RENDERGRID:
-    return (long int) tval_threads_rendergrid.tv_sec;
+  case tval_threads_2:
+    return (long int) tval_threads_2.tv_sec;
+  case tval_threads_1:
+    return (long int) tval_threads_1.tv_sec;
   default:
     break;
   }
@@ -100,10 +100,10 @@ long int getTimerMS(int timer){
     return (long int) tval_render_grid.tv_usec;
   case TVAL_SANDSIM:
     return (long int) tval_sandsim.tv_usec;
-  case TVAL_THREADS_SANDSIM:
-    return (long int)tval_threads_sandsim.tv_usec;
-  case TVAL_THREADS_RENDERGRID:
-    return (long int) tval_threads_rendergrid.tv_usec;
+  case tval_threads_2:
+    return (long int)tval_threads_2.tv_usec;
+  case tval_threads_1:
+    return (long int) tval_threads_1.tv_usec;
   default:
     break;
   }
@@ -122,11 +122,11 @@ void resetTimer(int timer){
   case TVAL_SANDSIM:
     gettimeofday(&tval_sandsim, NULL);
     break;
-  case TVAL_THREADS_SANDSIM:
-    gettimeofday(&tval_threads_sandsim, NULL);
+  case tval_threads_2:
+    gettimeofday(&tval_threads_2, NULL);
     break;
-  case TVAL_THREADS_RENDERGRID:
-    gettimeofday(&tval_threads_rendergrid, NULL);
+  case tval_threads_1:
+    gettimeofday(&tval_threads_1, NULL);
     break;
   default:
     break;
