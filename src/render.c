@@ -571,7 +571,7 @@ void world_sand_sim(SDL_Renderer *renderer, state_t *state)
             } else{  //Si no ha pasado el segundo
                 ++fps_sandsim_cnt; //Ir sumando los frames
             }
-          }
+          
 
           char str[128];
           sprintf(str, "void world_sand_sim function, # Of threads:%d , Thread: %d, FPS: %d , Time elapsed (s): %ld.%06ld", omp_get_num_threads(),
@@ -580,7 +580,7 @@ void world_sand_sim(SDL_Renderer *renderer, state_t *state)
               (long int)tval_result.tv_sec, 
               (long int)tval_result.tv_usec);
           renderFormattedText(renderer, str, 0 , 40);
-
+          }
         }
 
     }
