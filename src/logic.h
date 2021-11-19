@@ -1,9 +1,10 @@
 #ifndef LOGIC_H_
 #define LOGIC_H_
 
+//Max tested value: 1200
 #define N 400
-#define SCREEN_WIDTH 800.0
-#define SCREEN_HEIGHT 800.0
+#define SCREEN_WIDTH 2*N
+#define SCREEN_HEIGHT 2*N
 #define CELL_WIDTH (SCREEN_WIDTH / N)
 #define CELL_HEIGHT (SCREEN_HEIGHT / N)
 #define MOVES_PER_FRAME 1

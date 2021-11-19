@@ -128,24 +128,28 @@ int main(int argc, char **argv)
         case FALLING_SAND_SIM:
             for (int x = 0; x < N; x++){
                 for (int y = 0; y < N; y++){
-              
+                    
+                    state.board[x][y] = AIR;
+                    
                     //make rock is the sum is small
-                    if (y > (N-(N/10))) {
-                        state.board[x][y] = ROCK;
-                    } else if (y > (N-(N/5))) { //make the sea
-                        state.board[x][y] = BLUE;
-                    } else if (y < N/10) { //make sand
+                    if (y > (N-(N/2.1))) { //make the sea
+                        state.board[x][y] = WATER;
+                    } else if (y > (N-(N/1.05))) { //make sand
                         state.board[x][y] = SAND;
-                    } else { //everithing else is air
+                    } 
+                    
+                    if(y < 40){
                         state.board[x][y] = AIR;
                     }
-                    
+
+                    /*
                     if (y < (N-(N*0.75))&& y > (N-(N*0.8)) && x < (N-(N*0.25)) && x > (N-(N*0.3) )) { //make sand
                         state.board[x][y] = ESTATICO;
-                    } 
+                    } */
                 }
             } 
-                      
+
+            /*        
             // print the matrix state,board in the console to test
             for (int x = 0; x < N; x++){
                 for (int y = 0; y < N; y++){
@@ -153,6 +157,7 @@ int main(int argc, char **argv)
                 }
                 //printf("\n");
             }
+            */
           break;
 
         default:
@@ -326,7 +331,7 @@ int main(int argc, char **argv)
         render_grid(renderer, &state);
 
         if (state.mode == RUNNING_MODE)
-            usleep((1.0 / MOVES_PER_SECOND) * SECONDS_TO_MICROSECONDS);
+            //usleep((1.0 / MOVES_PER_SECOND) * SECONDS_TO_MICROSECONDS);
 
 
         switch (automata) {
@@ -346,7 +351,9 @@ int main(int argc, char **argv)
         //Función para imprimir un texto indicando la fuente, posición y color de la fuente
         //renderText(SDL_Renderer *renderer, TTF_Font *font, int r, int g, int b, char stringText[], int x, int y){
         renderText(renderer,font, 6, 150, 78, dest, 0, 0);
-
+        char str[32];
+        sprintf(str, "BrushSize: %d", brushSize);  
+        renderFormattedText(renderer,str,100, 0);
         SDL_RenderPresent(renderer);
 
     }

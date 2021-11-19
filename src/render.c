@@ -49,7 +49,7 @@ void render_grid(SDL_Renderer *renderer, const state_t *state)
 
     resetTimer(TVAL_THREAD_2); //Actualizar timer
     
-    if(( getTimerS(TVAL_THREAD_2)-getTimerS(TVAL_THREAD_1)>4) && (threads <= THREADS)){
+    if(( getTimerS(TVAL_THREAD_2)-getTimerS(TVAL_THREAD_1) > 9) && (threads < THREADS)){
         
         threads ++; //aumenta # threads
         resetTimer(TVAL_THREAD_2); //Actualizar timer
@@ -59,11 +59,11 @@ void render_grid(SDL_Renderer *renderer, const state_t *state)
     }
 
     
-    {
-      //  #pragma omp parallel for collapse(2) num_threads(threads)
-      
-      for (int x = 0; x < N; x++){
-          for (int y = 0; y < N; y++) {
+    //#pragma omp parallel num_threads(threads)  
+    //{
+    //#pragma omp for
+    for (int x = 0; x < N; x++){  
+        for (int y = 0; y < N; y++) {
               SDL_Rect rect = {
                   .x = x * CELL_WIDTH,
                   .y = y * CELL_HEIGHT,
@@ -135,20 +135,14 @@ void render_grid(SDL_Renderer *renderer, const state_t *state)
         }
 
         char str[128];
-        sprintf(str, "main for to render the grid, #of threads:%d , Thread: %d, FPS: %d , Time elapsed (s): %ld.%06ld", 
+        sprintf(str, "main for to render the grid, #Of threads:%d , Thread: %d, FPS: %d , Time elapsed (s): %ld.%06ld", 
         omp_get_num_threads(),
             omp_get_thread_num(), 
             fps_render_grid, 
             (long int)tval_result.tv_sec, 
             (long int)tval_result.tv_usec);
         renderFormattedText(renderer, str, 0 , 20);
-
-    }
-    
-    //printf("%d, %ld, %d\n",counter,(long int)tval_result.tv_sec, tval_result.tv_sec != 0);
-    
-
-      //}
+    //}
 
 }
 
@@ -484,14 +478,15 @@ void world_sand_sim(SDL_Renderer *renderer, state_t *state)
         bool seHaMovidoFlags[N][N] = {false};
 
         //*calculate time to render the grid
-        struct timeval tval_before, tval_after, tval_result;
-        gettimeofday(&tval_before, NULL);
+        struct timeval tval_before_sandsim, tval_after_sandsim, tval_result_sandsim;
+        gettimeofday(&tval_before_sandsim, NULL);
         
         
         #pragma omp parallel num_threads(threads) 
        {
-          #pragma omp for collapse(2)
+          
           for (int y = N-1; y >= 0; y--){
+              #pragma omp for //collapse(2)
               for (int x = 0; x < N; x++) {
                   
                   //Saltar si ya se ha movido esta posicion
@@ -554,16 +549,16 @@ void world_sand_sim(SDL_Renderer *renderer, state_t *state)
 
             
           //*calculate time to render the grid
-          gettimeofday(&tval_after, NULL);
+          gettimeofday(&tval_after_sandsim, NULL);
 
-          timersub(&tval_after, &tval_before, &tval_result);
+          timersub(&tval_after_sandsim, &tval_before_sandsim, &tval_result_sandsim);
 
 
           #pragma omp single nowait
           {
             //Calculo FPS
             //Si ha pasado un segundo desde la ultima medicion
-            if((tval_after.tv_sec - getTimerS(TVAL_SANDSIM)) != 0){
+            if((tval_after_sandsim.tv_sec - getTimerS(TVAL_SANDSIM)) != 0){
                 fps_sandsim = fps_sandsim_cnt; //Capturar cuantas veces se ha ejecutado esta funcion
                 fps_sandsim_cnt = 0; //Reiniciar la cuenta
                 resetTimer(TVAL_SANDSIM); //Actualizar timer
@@ -577,8 +572,8 @@ void world_sand_sim(SDL_Renderer *renderer, state_t *state)
           sprintf(str, "void world_sand_sim function, # Of threads:%d , Thread: %d, FPS: %d , Time elapsed (s): %ld.%06ld", omp_get_num_threads(),
               omp_get_thread_num(), 
               fps_sandsim, 
-              (long int)tval_result.tv_sec, 
-              (long int)tval_result.tv_usec);
+              (long int)tval_result_sandsim.tv_sec, 
+              (long int)tval_result_sandsim.tv_usec);
           renderFormattedText(renderer, str, 0 , 40);
           }
         }
