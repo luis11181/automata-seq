@@ -37,7 +37,7 @@ int fps_render_grid = 0;
 
 //timer to count 5 seconds to change the number of threads
 int threads=1;
-resetTimer(tval_threads_1)
+resetTimer(TVAL_THREAD_1)
 
 void render_grid(SDL_Renderer *renderer, const state_t *state)
 {
@@ -48,14 +48,14 @@ void render_grid(SDL_Renderer *renderer, const state_t *state)
 
     //* Change thread number every 5 seconds and check if threads are less than the maximum of threads, so we can see the FPS for each number of threads
 
-    resetTimer(tval_threads_2); //Actualizar timer
+    resetTimer(TVAL_THREAD_2); //Actualizar timer
     
-    if(( getTimerS(tval_threads_2)-getTimerS(tval_threads_1)>4) && (threads <= THREADS)){
+    if(( getTimerS(TVAL_THREAD_2)-getTimerS(TVAL_THREAD_1)>4) && (threads <= THREADS)){
         
         threads ++; //aumenta # threads
-        resetTimer(tval_threads_2); //Actualizar timer
-        resetTimer(tval_threads_1); //Actualizar timer
-        SDL_Log("Threads: %d\n, timer %ld", threads, getTimerS(tval_threads_2));
+        resetTimer(TVAL_THREAD_2); //Actualizar timer
+        resetTimer(TVAL_THREAD_1); //Actualizar timer
+        SDL_Log("Threads: %d\n, timer %ld", threads, getTimerS(TVAL_THREAD_2));
                
     }
 
