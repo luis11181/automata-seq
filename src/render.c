@@ -490,7 +490,7 @@ void world_sand_sim(SDL_Renderer *renderer, state_t *state)
         
         #pragma omp parallel num_threads(threads) 
        {
-          #pragma omp for
+          #pragma omp for collapse(2)
           for (int y = N-1; y >= 0; y--){
               for (int x = 0; x < N; x++) {
                   
