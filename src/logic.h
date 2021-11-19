@@ -2,7 +2,7 @@
 #define LOGIC_H_
 
 //Max tested value: 1200
-#define N 400
+#define N 800
 #define SCREEN_WIDTH 2*N
 #define SCREEN_HEIGHT 2*N
 #define CELL_WIDTH (SCREEN_WIDTH / N)

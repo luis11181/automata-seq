@@ -5,7 +5,7 @@
 #include "util.h"
 
 //Timers
-struct timeval tval_start, tval_render_grid, tval_sandsim, tval_threads_1, tval_threads_2;
+struct timeval tval_start, tval_render_grid, tval_sandsim, tval_threads_1, tval_threads_2, tval_total_1, tval_total_2;;
 
 //Fuentes
 TTF_Font *cfont;
@@ -70,6 +70,8 @@ void startUtilTimers(){
   resetTimer(TVAL_SANDSIM);
   resetTimer(TVAL_THREAD_2);
   resetTimer(TVAL_THREAD_1);
+  resetTimer(TVAL_TOTAL_2);
+  resetTimer(TVAL_TOTAL_1);
 }
 
 long int getTimerS(int timer){
@@ -85,6 +87,10 @@ long int getTimerS(int timer){
     return (long int) tval_threads_2.tv_sec;
   case TVAL_THREAD_1:
     return (long int) tval_threads_1.tv_sec;
+  case TVAL_TOTAL_2:
+    return (long int) tval_total_2.tv_sec;
+  case TVAL_TOTAL_1:
+    return (long int) tval_total_1.tv_sec;
   default:
     break;
   }
@@ -104,6 +110,10 @@ long int getTimerMS(int timer){
     return (long int)tval_threads_2.tv_usec;
   case TVAL_THREAD_1:
     return (long int) tval_threads_1.tv_usec;
+  case TVAL_TOTAL_2:
+    return (long int) tval_total_2.tv_usec;
+  case TVAL_TOTAL_1:
+    return (long int) tval_total_1.tv_usec;
   default:
     break;
   }
@@ -127,6 +137,12 @@ void resetTimer(int timer){
     break;
   case TVAL_THREAD_1:
     gettimeofday(&tval_threads_1, NULL);
+    break;
+  case TVAL_TOTAL_2:
+    gettimeofday(&tval_total_2, NULL);
+    break;
+  case TVAL_TOTAL_1:
+    gettimeofday(&tval_total_1, NULL);
     break;
   default:
     break;

@@ -40,22 +40,25 @@ int threads=1;
 
 void render_grid(SDL_Renderer *renderer, const state_t *state)
 {
-    //*calculate time to render the grid
-    struct timeval tval_before, tval_after, tval_result;
+    // //*calculate time to render the grid
+    // struct timeval tval_before, tval_after, tval_result;
     
-    gettimeofday(&tval_before, NULL);
+    // gettimeofday(&tval_before, NULL);
+
 
     //* Change thread number every 5 seconds and check if threads are less than the maximum of threads, so we can see the FPS for each number of threads
+    ++fps_render_grid_cnt; //Ir sumando los frames
 
     resetTimer(TVAL_THREAD_2); //Actualizar timer
     
-    if(( getTimerS(TVAL_THREAD_2)-getTimerS(TVAL_THREAD_1) > 9) && (threads < THREADS)){
+    if(( getTimerS(TVAL_THREAD_2)-getTimerS(TVAL_THREAD_1) >= 10) && (threads < THREADS)){
         
+        SDL_Log("Threads: %d\n, #de frames que realizo en 10 segundos: %d", threads, fps_render_grid_cnt);
         threads ++; //aumenta # threads
         resetTimer(TVAL_THREAD_2); //Actualizar timer
         resetTimer(TVAL_THREAD_1); //Actualizar timer
-        SDL_Log("Threads: %d\n, timer %ld", threads, getTimerS(TVAL_THREAD_2));
-               
+        fps_render_grid_cnt = 0; //Reiniciar la cuenta
+       
     }
 
     
@@ -120,28 +123,33 @@ void render_grid(SDL_Renderer *renderer, const state_t *state)
           }}
 
 
-        //*calculate time to render the grid
-        gettimeofday(&tval_after, NULL);
-        timersub(&tval_after, &tval_before, &tval_result);
+        // //*calculate time to render the grid
+        // gettimeofday(&tval_after, NULL);
+        // timersub(&tval_after, &tval_before, &tval_result);
         
-        //Calculo FPS
-        //Si ha pasado un segundo desde la ultima medicion
-        if((tval_after.tv_sec - getTimerS(TVAL_RENDER_GRID)) != 0){
-            fps_render_grid = fps_render_grid_cnt; //Capturar cuantas veces se ha ejecutado esta funcion
-            fps_render_grid_cnt = 0; //Reiniciar la cuenta
-            resetTimer(TVAL_RENDER_GRID); //Actualizar timer
-        } else{  //Si no ha pasado el segundo
-            ++fps_render_grid_cnt; //Ir sumando los frames
-        }
+        // //Calculo FPS
+        // //Si ha pasado un segundo desde la ultima medicion
+        // if((tval_after.tv_sec - getTimerS(TVAL_RENDER_GRID)) != 0){
+        //     fps_render_grid = fps_render_grid_cnt; //Capturar cuantas veces se ha ejecutado esta funcion
+        //     fps_render_grid_cnt = 0; //Reiniciar la cuenta
+        //     resetTimer(TVAL_RENDER_GRID); //Actualizar timer
+        // } else{  //Si no ha pasado el segundo
+        //     ++fps_render_grid_cnt; //Ir sumando los frames
+        // }
+
+        //* calculate total TIME to run the whole program
+       resetTimer(TVAL_TOTAL_2);
+
+        long double  d = ((getTimerS(TVAL_TOTAL_2)*1000000+(getTimerMS(TVAL_TOTAL_2))) -(getTimerS(TVAL_TOTAL_1)*1000000+(getTimerMS(TVAL_TOTAL_1)) ));
 
         char str[128];
-        sprintf(str, "main for to render the grid, #Of threads:%d , Thread: %d, FPS: %d , Time elapsed (s): %ld.%06ld", 
-        omp_get_num_threads(),
-            omp_get_thread_num(), 
-            fps_render_grid, 
-            (long int)tval_result.tv_sec, 
-            (long int)tval_result.tv_usec);
+        sprintf(str, "total time to loop the whole program (micro s): %Lf", 
+            d
+           );
         renderFormattedText(renderer, str, 0 , 20);
+
+        //* calculate total time to run the whole program
+        resetTimer(TVAL_TOTAL_1); 
     //}
 
 }
