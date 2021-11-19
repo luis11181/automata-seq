@@ -37,7 +37,7 @@ int fps_render_grid = 0;
 
 //timer to count 5 seconds to change the number of threads
 int threads=1;
-resetTimer(TVAL_THREAD_1)
+resetTimer(TVAL_THREAD_1);
 
 void render_grid(SDL_Renderer *renderer, const state_t *state)
 {
