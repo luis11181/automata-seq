@@ -84,6 +84,5 @@ enum ORIENTATION {
     DOWN,
     LEFT
 };
-
-
+.
 #endif // LOGIC_H_
