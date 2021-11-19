@@ -44,7 +44,7 @@ void render_grid(SDL_Renderer *renderer, const state_t *state)
     gettimeofday(&tval_before, NULL);
 
     //* Change thread number every 5 seconds and check if threads are less than the maximum of threads, so we can see the FPS for each number of threads
-    if(( getTimerS(TVAL_THREADS_SANDSIM)>) && (threads <= THREADS)){
+    if(( getTimerS(TVAL_THREADS_SANDSIM)>4) && (threads <= THREADS)){
         
         threads ++; //aumenta # threads
         resetTimer(TVAL_THREADS_SANDSIM); //Actualizar timer
