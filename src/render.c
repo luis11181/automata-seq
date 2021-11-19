@@ -35,9 +35,8 @@ const SDL_Color ANT_COLOR = { .r = 255, .g = 50, .b = 50 };
 int fps_render_grid_cnt = 0;
 int fps_render_grid = 0;
 
-//timer to count 5 seconds to change the number of threads
+//NUMBER OF THREADS WE ARE USING IN SPECIFIVC MOMENT
 int threads=1;
-resetTimer(TVAL_THREAD_1);
 
 void render_grid(SDL_Renderer *renderer, const state_t *state)
 {
