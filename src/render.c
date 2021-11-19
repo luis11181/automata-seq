@@ -489,96 +489,100 @@ void world_sand_sim(SDL_Renderer *renderer, state_t *state)
         
         
         #pragma omp parallel num_threads(threads) 
+       {
+          #pragma omp for
+          for (int y = N-1; y >= 0; y--){
+              for (int x = 0; x < N; x++) {
+                  
+                  //Saltar si ya se ha movido esta posicion
+                  if(seHaMovidoFlags[x][y]) continue;
+                  
+                  //*g  rules and functions for sand
+                  if(state->board[x][y] == SAND){
+                      sand_sim_mover_abajo_y_lados(state, SAND, seHaMovidoFlags, x, y);                  
+                  }
+
+                  //*g rules and functions for rock
+                  if(state->board[x][y] == ROCK){
+                      sand_sim_mover_abajo(state, ROCK, seHaMovidoFlags, x, y);
+                  }
+
+                //*g  rules and functions for water
+                  if(state->board[x][y] == WATER){
+                      
+                      //Si el agua no se puede mover abajo o a los lados
+                      if(!sand_sim_mover_abajo_y_lados(state, WATER, seHaMovidoFlags, x, y)){
+                          //Se mueve a la izquierda o derecha
+                          sand_sim_mover_izq_der(state, WATER, seHaMovidoFlags, x, y);
+                      }   
+                  }
+
+                //*g  rules and functions for oil
+                  if(state->board[x][y] == OIL){
+                      //Si el agua no se puede mover abajo o a los lados
+                      if(!sand_sim_mover_abajo_y_lados(state, OIL, seHaMovidoFlags, x, y)){
+                          //Se mueve a la izquierda o derecha
+                          sand_sim_mover_izq_der(state, OIL, seHaMovidoFlags, x, y);
+                      }   
+                  }
+
+                  //*g rules and functions for fire
+                  if(state->board[x][y] == FIRE){
+                      if (!sand_sim_mover_abajo_y_lados(state, FIRE, seHaMovidoFlags, x, y))
+                      {
+                        bool seDescompone= drand48() < 0.2;
+                        if(seDescompone){
+                            state->board[x][y] = HUMO;
+                        } 
+
+                      }
+                      
+                  }
+
+                  //*g rules and functions for humo
+                  if(state->board[x][y] == HUMO){
+                    //Si el humo no puede moverse arriba o diagonal va para los lados
+                      if(!sand_sim_mover_arriba_y_lados(state, HUMO, seHaMovidoFlags, x, y)){
+                          //Se mueve a la izquierda o derecha
+                          sand_sim_mover_izq_der(state, HUMO, seHaMovidoFlags, x, y);
+                      }   
+                      
+                  }
+
+              }
+          }  
+
+            
+          //*calculate time to render the grid
+          gettimeofday(&tval_after, NULL);
+
+          timersub(&tval_after, &tval_before, &tval_result);
+
+
+          #pragma omp single nowait
           {
-            #pragma omp for
-        for (int y = N-1; y >= 0; y--){
-            for (int x = 0; x < N; x++) {
-                
-                //Saltar si ya se ha movido esta posicion
-                if(seHaMovidoFlags[x][y]) continue;
-                
-                //*g  rules and functions for sand
-                if(state->board[x][y] == SAND){
-                    sand_sim_mover_abajo_y_lados(state, SAND, seHaMovidoFlags, x, y);                  
-                }
+            //Calculo FPS
+            //Si ha pasado un segundo desde la ultima medicion
+            if((tval_after.tv_sec - getTimerS(TVAL_SANDSIM)) != 0){
+                fps_sandsim = fps_sandsim_cnt; //Capturar cuantas veces se ha ejecutado esta funcion
+                fps_sandsim_cnt = 0; //Reiniciar la cuenta
+                resetTimer(TVAL_SANDSIM); //Actualizar timer
 
-                //*g rules and functions for rock
-                if(state->board[x][y] == ROCK){
-                    sand_sim_mover_abajo(state, ROCK, seHaMovidoFlags, x, y);
-                }
-
-               //*g  rules and functions for water
-                if(state->board[x][y] == WATER){
-                    
-                    //Si el agua no se puede mover abajo o a los lados
-                    if(!sand_sim_mover_abajo_y_lados(state, WATER, seHaMovidoFlags, x, y)){
-                        //Se mueve a la izquierda o derecha
-                        sand_sim_mover_izq_der(state, WATER, seHaMovidoFlags, x, y);
-                    }   
-                }
-
-              //*g  rules and functions for oil
-                if(state->board[x][y] == OIL){
-                    //Si el agua no se puede mover abajo o a los lados
-                    if(!sand_sim_mover_abajo_y_lados(state, OIL, seHaMovidoFlags, x, y)){
-                        //Se mueve a la izquierda o derecha
-                        sand_sim_mover_izq_der(state, OIL, seHaMovidoFlags, x, y);
-                    }   
-                }
-
-                //*g rules and functions for fire
-                if(state->board[x][y] == FIRE){
-                    if (!sand_sim_mover_abajo_y_lados(state, FIRE, seHaMovidoFlags, x, y))
-                    {
-                      bool seDescompone= drand48() < 0.2;
-                      if(seDescompone){
-                          state->board[x][y] = HUMO;
-                      } 
-
-                    }
-                    
-                }
-
-                //*g rules and functions for humo
-                if(state->board[x][y] == HUMO){
-                  //Si el humo no puede moverse arriba o diagonal va para los lados
-                    if(!sand_sim_mover_arriba_y_lados(state, HUMO, seHaMovidoFlags, x, y)){
-                        //Se mueve a la izquierda o derecha
-                        sand_sim_mover_izq_der(state, HUMO, seHaMovidoFlags, x, y);
-                    }   
-                    
-                }
-
+            } else{  //Si no ha pasado el segundo
+                ++fps_sandsim_cnt; //Ir sumando los frames
             }
-        }  
-
           }
-          
-        //*calculate time to render the grid
-        gettimeofday(&tval_after, NULL);
 
-        timersub(&tval_after, &tval_before, &tval_result);
+          char str[128];
+          sprintf(str, "void world_sand_sim function, # Of threads:%d , Thread: %d, FPS: %d , Time elapsed (s): %ld.%06ld", omp_get_num_threads(),
+              omp_get_thread_num(), 
+              fps_sandsim, 
+              (long int)tval_result.tv_sec, 
+              (long int)tval_result.tv_usec);
+          renderFormattedText(renderer, str, 0 , 40);
 
-        //Calculo FPS
-        //Si ha pasado un segundo desde la ultima medicion
-        if((tval_after.tv_sec - getTimerS(TVAL_SANDSIM)) != 0){
-            fps_sandsim = fps_sandsim_cnt; //Capturar cuantas veces se ha ejecutado esta funcion
-            fps_sandsim_cnt = 0; //Reiniciar la cuenta
-            resetTimer(TVAL_SANDSIM); //Actualizar timer
-
-        } else{  //Si no ha pasado el segundo
-            ++fps_sandsim_cnt; //Ir sumando los frames
         }
 
-        char str[128];
-        sprintf(str, "void world_sand_sim function, # Of threads:%d , Thread: %d, FPS: %d , Time elapsed (s): %ld.%06ld", omp_get_num_threads(),
-            omp_get_thread_num(), 
-            fps_sandsim, 
-            (long int)tval_result.tv_sec, 
-            (long int)tval_result.tv_usec);
-        renderFormattedText(renderer, str, 0 , 40);
-
-       //}
     }
     }  
     
