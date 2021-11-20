@@ -57,7 +57,7 @@ void render_grid(SDL_Renderer *renderer, const state_t *state)
         
         double avg_fps = render_grid_framecnt/s_cambio_threads;
         long double avg_time = ((avg_time_render_grid/avg_fps)/s_cambio_threads)*1000000;
-
+        fps_render_grid = avg_fps;
         SDL_Log("[RENDER] Threads: %d, #de FPS promedio de los anteriores %d segundos: %0.1f, Tiempo promedio (ms): %0.1Lf", 
         threads, 
         s_cambio_threads, 
@@ -147,10 +147,14 @@ void render_grid(SDL_Renderer *renderer, const state_t *state)
         avg_time_render_grid += d/1000000;
 
         char str[128];
-        sprintf(str, "total time to loop the whole program (ms): %0.1Lf", 
+        sprintf(str, "Total time to loop the whole program (ms): %0.1Lf", 
             d
            );
         renderFormattedText(renderer, str, 0 , 20);
+
+        char str2[128];
+        sprintf(str2, "Threads: %d, AVG_FPS(%d s): %d", threads, s_cambio_threads, fps_render_grid);
+        renderFormattedText(renderer, str2, 250 , 0);
 
         //* calculate total time to run the whole program
         resetTimer(TVAL_TOTAL_1); 
