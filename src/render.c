@@ -31,12 +31,14 @@ const SDL_Color GRAYSMOKE_CELL_COLOR = { .r = 176, .g = 176, .b = 176 };
 const SDL_Color STRUCTURE_CELL_COLOR = { .r = 67, .g = 59, .b = 27 };
 const SDL_Color ANT_COLOR = { .r = 255, .g = 50, .b = 50 };
 
-
-int fps_render_grid_cnt = 0;
-int fps_render_grid = 0;
-
-//NUMBER OF THREADS WE ARE USING IN SPECIFIVC MOMENT
+//NUMBER OF THREADS WE ARE USING IN SPECIFIC MOMENT
 int threads=1;
+int s_cambio_threads = 10; //Segundos para aumentar las thread
+
+//Variables benchmarking Render Grid
+int render_grid_framecnt = 0;
+int fps_render_grid = 0;
+double avg_time_render_grid = 0;
 
 void render_grid(SDL_Renderer *renderer, const state_t *state)
 {
@@ -47,17 +49,25 @@ void render_grid(SDL_Renderer *renderer, const state_t *state)
 
 
     //* Change thread number every 5 seconds and check if threads are less than the maximum of threads, so we can see the FPS for each number of threads
-    ++fps_render_grid_cnt; //Ir sumando los frames
+    ++render_grid_framecnt; //Ir sumando los frames
 
     resetTimer(TVAL_THREAD_2); //Actualizar timer
     
-    if(( getTimerS(TVAL_THREAD_2)-getTimerS(TVAL_THREAD_1) >= 6) && (threads < THREADS)){
+    if(( getTimerS(TVAL_THREAD_2)-getTimerS(TVAL_THREAD_1) >= s_cambio_threads) && (threads <= THREADS)){
         
-        SDL_Log("Threads: %d\n, #de FPS promedio de los anteriores 6 segundos: %d", threads, fps_render_grid_cnt/6);
+        double avg_fps = render_grid_framecnt/s_cambio_threads;
+        long double avg_time = ((avg_time_render_grid/avg_fps)/s_cambio_threads)*1000000;
+
+        SDL_Log("[RENDER] Threads: %d, #de FPS promedio de los anteriores %d segundos: %0.1f, Tiempo promedio (ms): %0.1Lf", 
+        threads, 
+        s_cambio_threads, 
+        avg_fps,
+        avg_time);
         threads ++; //aumenta # threads
         resetTimer(TVAL_THREAD_2); //Actualizar timer
         resetTimer(TVAL_THREAD_1); //Actualizar timer
-        fps_render_grid_cnt = 0; //Reiniciar la cuenta
+        render_grid_framecnt = 0; //Reiniciar la cuenta
+        avg_time_render_grid = 0; //Reniciar el promedio de tiempo en X segundos
        
     }
 
@@ -127,23 +137,17 @@ void render_grid(SDL_Renderer *renderer, const state_t *state)
         // gettimeofday(&tval_after, NULL);
         // timersub(&tval_after, &tval_before, &tval_result);
         
-        // //Calculo FPS
-        // //Si ha pasado un segundo desde la ultima medicion
-        // if((tval_after.tv_sec - getTimerS(TVAL_RENDER_GRID)) != 0){
-        //     fps_render_grid = fps_render_grid_cnt; //Capturar cuantas veces se ha ejecutado esta funcion
-        //     fps_render_grid_cnt = 0; //Reiniciar la cuenta
-        //     resetTimer(TVAL_RENDER_GRID); //Actualizar timer
-        // } else{  //Si no ha pasado el segundo
-        //     ++fps_render_grid_cnt; //Ir sumando los frames
-        // }
+
 
         //* calculate total TIME to run the whole program
-       resetTimer(TVAL_TOTAL_2);
+        resetTimer(TVAL_TOTAL_2);
 
         long double  d = ((getTimerS(TVAL_TOTAL_2)*1000000+(getTimerMS(TVAL_TOTAL_2))) -(getTimerS(TVAL_TOTAL_1)*1000000+(getTimerMS(TVAL_TOTAL_1)) ));
 
+        avg_time_render_grid += d/1000000;
+
         char str[128];
-        sprintf(str, "total time to loop the whole program (micro s): %Lf", 
+        sprintf(str, "total time to loop the whole program (ms): %0.1Lf", 
             d
            );
         renderFormattedText(renderer, str, 0 , 20);
@@ -465,20 +469,31 @@ bool sand_sim_mover_arriba_y_lados(state_t *state, short sustancia, bool seHaMov
     return false; 
 }
 
-
-int fps_sandsim_cnt = 0;
-int thread_sandsim_cnt = 0;
+//Variables benchmarking Función SandSim
+int sandsim_framecnt = 0;
+int thread_sandsim_cnt = 1;
 int fps_sandsim = 0;
+//double time_sandsim_acum = 0;
+double avg_time_sandsim = 0;
+double avg_FPS_sandsim = 0;
 
 //***** world_sand_sim() RUNS THE SIMULATION logic for all elements of the world
 void world_sand_sim(SDL_Renderer *renderer, state_t *state)
 {
 
+    ++sandsim_framecnt; //Sumando los fps de sandsim
+
     if (state->mode == RUNNING_MODE){
 
-      //* posible for para hacer la curva de rendimiento con direfentes threads
-      //for (int j = 0; j < THREADS; j++)
-      //{
+        //CÁLCULO DE EL TIEMPO PROMEDIO PARA CADA NUMERO DE THREADS
+        if(threads != thread_sandsim_cnt){
+            double avg_fps = sandsim_framecnt/s_cambio_threads;
+            long double avg_time = (avg_time_sandsim /avg_fps) / s_cambio_threads; 
+            SDL_Log("[SANDSIM] Tiempo promedio para %d threads (ms): %0.1Lf",thread_sandsim_cnt,avg_time);
+            avg_time_sandsim = 0; //Reinciar el conteo del promedio acumulado en X segundos
+            sandsim_framecnt = 0;
+            thread_sandsim_cnt = threads; //Se actualiza la variable para el contador interno de sandsim
+        }
 
         
       for (int i = 0; i < MOVES_PER_FRAME; i++) {
@@ -566,21 +581,24 @@ void world_sand_sim(SDL_Renderer *renderer, state_t *state)
           {
             //Calculo FPS
             //Si ha pasado un segundo desde la ultima medicion
-            if((tval_after_sandsim.tv_sec - getTimerS(TVAL_SANDSIM)) != 0){
-                fps_sandsim = fps_sandsim_cnt; //Capturar cuantas veces se ha ejecutado esta funcion
-                fps_sandsim_cnt = 0; //Reiniciar la cuenta
+          /*  if((tval_after_sandsim.tv_sec - getTimerS(TVAL_SANDSIM)) != 0){
+                fps_sandsim = fps_sandsim_cnt; //Capturar cuantas veces se ha ejecutado esta funcion (FPS)
+                fps_sandsim_cnt = 0; //Reiniciar la cuenta de FPS
+                avg_time_sandsim += time_sandsim_acum / (long int)fps_sandsim; //Tiempos de cada frame/ FPS = prom. tiempo ejecución por segundo
+                //SDL_Log("%lf",avg_time_sandsim);
+                time_sandsim_acum = 0; //Reiniciar el acumulador del tiempo
                 resetTimer(TVAL_SANDSIM); //Actualizar timer
 
             } else{  //Si no ha pasado el segundo
                 ++fps_sandsim_cnt; //Ir sumando los frames
+                time_sandsim_acum += tval_result_sandsim.tv_usec; //Va acumulando todos los tiempos de cada frame
             }
-          
+          */
+
+            avg_time_sandsim += tval_result_sandsim.tv_usec;
 
           char str[128];
-          sprintf(str, "void world_sand_sim function, # Of threads:%d , Thread: %d, FPS: %d , Time elapsed (s): %ld.%06ld", omp_get_num_threads(),
-              omp_get_thread_num(), 
-              fps_sandsim, 
-              (long int)tval_result_sandsim.tv_sec, 
+          sprintf(str, "Total time to execute function world_sand_sim (ms): %ld", 
               (long int)tval_result_sandsim.tv_usec);
           renderFormattedText(renderer, str, 0 , 40);
           }
