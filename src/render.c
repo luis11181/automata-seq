@@ -51,9 +51,9 @@ void render_grid(SDL_Renderer *renderer, const state_t *state)
 
     resetTimer(TVAL_THREAD_2); //Actualizar timer
     
-    if(( getTimerS(TVAL_THREAD_2)-getTimerS(TVAL_THREAD_1) >= 10) && (threads < THREADS)){
+    if(( getTimerS(TVAL_THREAD_2)-getTimerS(TVAL_THREAD_1) >= 6) && (threads < THREADS)){
         
-        SDL_Log("Threads: %d\n, #de frames que realizo en 10 segundos: %d", threads, fps_render_grid_cnt);
+        SDL_Log("Threads: %d\n, #de FPS promedio de los anteriores 6 segundos: %d", threads, fps_render_grid_cnt/6);
         threads ++; //aumenta # threads
         resetTimer(TVAL_THREAD_2); //Actualizar timer
         resetTimer(TVAL_THREAD_1); //Actualizar timer
