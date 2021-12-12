@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <iostream>
 #include <sys/time.h>
 #include <unistd.h>
 #include <stdbool.h> 
@@ -26,6 +27,7 @@ void print_usage()
     printf("     Conway's Game of Life   -> gameoflife\n");
     printf("     Falling Sand Simulator  -> sandsim\n");
 }
+
 
 
 int main(int argc, char **argv)

@@ -2,6 +2,7 @@
 #include "/usr/include/SDL2/SDL_ttf.h"
 #include <stdbool.h> 
 #include <string.h>
+#include <iostream>
 #include <stdlib.h>
 #include <sys/time.h>
 
@@ -39,6 +40,7 @@ int s_cambio_threads = 10; //Segundos para aumentar las thread
 int render_grid_framecnt = 0;
 int fps_render_grid = 0;
 double avg_time_render_grid = 0;
+
 
 void render_grid(SDL_Renderer *renderer, const state_t *state)
 {
@@ -481,134 +483,165 @@ int fps_sandsim = 0;
 double avg_time_sandsim = 0;
 double avg_FPS_sandsim = 0;
 
+
+//* /////////////////////////////////
+//* cuda function
+__global__ void add( int a, int b, int *c ) {
+*c = a + b;
+}
+//* /////////////////////////////////
+
+
 //***** world_sand_sim() RUNS THE SIMULATION logic for all elements of the world
 void world_sand_sim(SDL_Renderer *renderer, state_t *state)
 {
 
-    ++sandsim_framecnt; //Sumando los fps de sandsim
+  //*/////////////////////////////////////
+  //CUDA CODE
+  
+  // int c;
+  // int *dev_c;
+  // cudaMalloc( (void**)&dev_c, sizeof(int) );
+  // add<<<1,1>>>( 2, 7, dev_c );
 
-    if (state->mode == RUNNING_MODE){
+  // cudaMemcpy( &c,
+  // dev_c,
+  // sizeof(int),
+  // cudaMemcpyDeviceToHost );
 
-        //CÁLCULO DE EL TIEMPO PROMEDIO PARA CADA NUMERO DE THREADS
-        if(threads != thread_sandsim_cnt){
-            double avg_fps = sandsim_framecnt/s_cambio_threads;
-            long double avg_time = (avg_time_sandsim /avg_fps) / s_cambio_threads; 
-            SDL_Log("[SANDSIM] Tiempo promedio para %d threads (ms): %0.1Lf",thread_sandsim_cnt,avg_time);
-            avg_time_sandsim = 0; //Reinciar el conteo del promedio acumulado en X segundos
-            sandsim_framecnt = 0;
-            thread_sandsim_cnt = threads; //Se actualiza la variable para el contador interno de sandsim
-        }
+  // printf( "2 + 7 = %d\n", c );
+  // cudaFree( dev_c );
 
+  //*/////////////////////////////////////
+
+
+
+
+
+  ++sandsim_framecnt; //Sumando los fps de sandsim
+
+  if (state->mode == RUNNING_MODE){
+
+      //CÁLCULO DE EL TIEMPO PROMEDIO PARA CADA NUMERO DE THREADS
+      if(threads != thread_sandsim_cnt){
+          double avg_fps = sandsim_framecnt/s_cambio_threads;
+          long double avg_time = (avg_time_sandsim /avg_fps) / s_cambio_threads; 
+          SDL_Log("[SANDSIM] Tiempo promedio para %d threads (ms): %0.1Lf",thread_sandsim_cnt,avg_time);
+          avg_time_sandsim = 0; //Reinciar el conteo del promedio acumulado en X segundos
+          sandsim_framecnt = 0;
+          thread_sandsim_cnt = threads; //Se actualiza la variable para el contador interno de sandsim
+      }
+
+      
+    for (int i = 0; i < MOVES_PER_FRAME; i++) {
+      //int new_board[N][N] = {state->board};
+      bool seHaMovidoFlags[N][N] = {false};
+
+      //*calculate time to render the grid
+      struct timeval tval_before_sandsim, tval_after_sandsim, tval_result_sandsim;
+      gettimeofday(&tval_before_sandsim, NULL);
+      
+      
+      #pragma omp parallel num_threads(threads) 
+      {
         
-      for (int i = 0; i < MOVES_PER_FRAME; i++) {
-        //int new_board[N][N] = {state->board};
-        bool seHaMovidoFlags[N][N] = {false};
+        for (int y = N-1; y >= 0; y--){
+            #pragma omp for //collapse(2)
+            for (int x = 0; x < N; x++) {
+                
+                //Saltar si ya se ha movido esta posicion
+                if(seHaMovidoFlags[x][y]) continue;
+                
+                //*g  rules and functions for sand
+                if(state->board[x][y] == SAND){
+                    sand_sim_mover_abajo_y_lados(state, SAND, seHaMovidoFlags, x, y);                  
+                }
 
-        //*calculate time to render the grid
-        struct timeval tval_before_sandsim, tval_after_sandsim, tval_result_sandsim;
-        gettimeofday(&tval_before_sandsim, NULL);
-        
-        
-        #pragma omp parallel num_threads(threads) 
-       {
-          
-          for (int y = N-1; y >= 0; y--){
-              #pragma omp for //collapse(2)
-              for (int x = 0; x < N; x++) {
-                  
-                  //Saltar si ya se ha movido esta posicion
-                  if(seHaMovidoFlags[x][y]) continue;
-                  
-                  //*g  rules and functions for sand
-                  if(state->board[x][y] == SAND){
-                      sand_sim_mover_abajo_y_lados(state, SAND, seHaMovidoFlags, x, y);                  
-                  }
+                //*g rules and functions for rock
+                if(state->board[x][y] == ROCK){
+                    sand_sim_mover_abajo(state, ROCK, seHaMovidoFlags, x, y);
+                }
 
-                  //*g rules and functions for rock
-                  if(state->board[x][y] == ROCK){
-                      sand_sim_mover_abajo(state, ROCK, seHaMovidoFlags, x, y);
-                  }
+              //*g  rules and functions for water
+                if(state->board[x][y] == WATER){
+                    
+                    //Si el agua no se puede mover abajo o a los lados
+                    if(!sand_sim_mover_abajo_y_lados(state, WATER, seHaMovidoFlags, x, y)){
+                        //Se mueve a la izquierda o derecha
+                        sand_sim_mover_izq_der(state, WATER, seHaMovidoFlags, x, y);
+                    }   
+                }
 
-                //*g  rules and functions for water
-                  if(state->board[x][y] == WATER){
-                      
-                      //Si el agua no se puede mover abajo o a los lados
-                      if(!sand_sim_mover_abajo_y_lados(state, WATER, seHaMovidoFlags, x, y)){
-                          //Se mueve a la izquierda o derecha
-                          sand_sim_mover_izq_der(state, WATER, seHaMovidoFlags, x, y);
-                      }   
-                  }
+              //*g  rules and functions for oil
+                if(state->board[x][y] == OIL){
+                    //Si el agua no se puede mover abajo o a los lados
+                    if(!sand_sim_mover_abajo_y_lados(state, OIL, seHaMovidoFlags, x, y)){
+                        //Se mueve a la izquierda o derecha
+                        sand_sim_mover_izq_der(state, OIL, seHaMovidoFlags, x, y);
+                    }   
+                }
 
-                //*g  rules and functions for oil
-                  if(state->board[x][y] == OIL){
-                      //Si el agua no se puede mover abajo o a los lados
-                      if(!sand_sim_mover_abajo_y_lados(state, OIL, seHaMovidoFlags, x, y)){
-                          //Se mueve a la izquierda o derecha
-                          sand_sim_mover_izq_der(state, OIL, seHaMovidoFlags, x, y);
-                      }   
-                  }
+                //*g rules and functions for fire
+                if(state->board[x][y] == FIRE){
+                    if (!sand_sim_mover_abajo_y_lados(state, FIRE, seHaMovidoFlags, x, y))
+                    {
+                      bool seDescompone= drand48() < 0.2;
+                      if(seDescompone){
+                          state->board[x][y] = HUMO;
+                      } 
 
-                  //*g rules and functions for fire
-                  if(state->board[x][y] == FIRE){
-                      if (!sand_sim_mover_abajo_y_lados(state, FIRE, seHaMovidoFlags, x, y))
-                      {
-                        bool seDescompone= drand48() < 0.2;
-                        if(seDescompone){
-                            state->board[x][y] = HUMO;
-                        } 
+                    }
+                    
+                }
 
-                      }
-                      
-                  }
+                //*g rules and functions for humo
+                if(state->board[x][y] == HUMO){
+                  //Si el humo no puede moverse arriba o diagonal va para los lados
+                    if(!sand_sim_mover_arriba_y_lados(state, HUMO, seHaMovidoFlags, x, y)){
+                        //Se mueve a la izquierda o derecha
+                        sand_sim_mover_izq_der(state, HUMO, seHaMovidoFlags, x, y);
+                    }   
+                    
+                }
 
-                  //*g rules and functions for humo
-                  if(state->board[x][y] == HUMO){
-                    //Si el humo no puede moverse arriba o diagonal va para los lados
-                      if(!sand_sim_mover_arriba_y_lados(state, HUMO, seHaMovidoFlags, x, y)){
-                          //Se mueve a la izquierda o derecha
-                          sand_sim_mover_izq_der(state, HUMO, seHaMovidoFlags, x, y);
-                      }   
-                      
-                  }
-
-              }
-          }  
-
-            
-          //*calculate time to render the grid
-          gettimeofday(&tval_after_sandsim, NULL);
-
-          timersub(&tval_after_sandsim, &tval_before_sandsim, &tval_result_sandsim);
-
-
-          #pragma omp single nowait
-          {
-            //Calculo FPS
-            //Si ha pasado un segundo desde la ultima medicion
-          /*  if((tval_after_sandsim.tv_sec - getTimerS(TVAL_SANDSIM)) != 0){
-                fps_sandsim = fps_sandsim_cnt; //Capturar cuantas veces se ha ejecutado esta funcion (FPS)
-                fps_sandsim_cnt = 0; //Reiniciar la cuenta de FPS
-                avg_time_sandsim += time_sandsim_acum / (long int)fps_sandsim; //Tiempos de cada frame/ FPS = prom. tiempo ejecución por segundo
-                //SDL_Log("%lf",avg_time_sandsim);
-                time_sandsim_acum = 0; //Reiniciar el acumulador del tiempo
-                resetTimer(TVAL_SANDSIM); //Actualizar timer
-
-            } else{  //Si no ha pasado el segundo
-                ++fps_sandsim_cnt; //Ir sumando los frames
-                time_sandsim_acum += tval_result_sandsim.tv_usec; //Va acumulando todos los tiempos de cada frame
             }
-          */
+        }  
 
-            avg_time_sandsim += tval_result_sandsim.tv_usec;
+          
+        //*calculate time to render the grid
+        gettimeofday(&tval_after_sandsim, NULL);
 
-          char str[128];
-          sprintf(str, "Total time to execute function world_sand_sim (ms): %ld", 
-              (long int)tval_result_sandsim.tv_usec);
-          renderFormattedText(renderer, str, 0 , 40);
+        timersub(&tval_after_sandsim, &tval_before_sandsim, &tval_result_sandsim);
+
+
+        #pragma omp single nowait
+        {
+          //Calculo FPS
+          //Si ha pasado un segundo desde la ultima medicion
+        /*  if((tval_after_sandsim.tv_sec - getTimerS(TVAL_SANDSIM)) != 0){
+              fps_sandsim = fps_sandsim_cnt; //Capturar cuantas veces se ha ejecutado esta funcion (FPS)
+              fps_sandsim_cnt = 0; //Reiniciar la cuenta de FPS
+              avg_time_sandsim += time_sandsim_acum / (long int)fps_sandsim; //Tiempos de cada frame/ FPS = prom. tiempo ejecución por segundo
+              //SDL_Log("%lf",avg_time_sandsim);
+              time_sandsim_acum = 0; //Reiniciar el acumulador del tiempo
+              resetTimer(TVAL_SANDSIM); //Actualizar timer
+
+          } else{  //Si no ha pasado el segundo
+              ++fps_sandsim_cnt; //Ir sumando los frames
+              time_sandsim_acum += tval_result_sandsim.tv_usec; //Va acumulando todos los tiempos de cada frame
           }
-        }
+        */
 
-    }
-    }  
+          avg_time_sandsim += tval_result_sandsim.tv_usec;
+
+        char str[128];
+        sprintf(str, "Total time to execute function world_sand_sim (ms): %ld", 
+            (long int)tval_result_sandsim.tv_usec);
+        renderFormattedText(renderer, str, 0 , 40);
+        }
+      }
+
+  }
+  }  
     
 }
