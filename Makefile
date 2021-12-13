@@ -1,17 +1,17 @@
-CC=gcc
-CFLAGS= -Wall `sdl2-config --cflags --libs` -fopenmp -lm -D_DEFAULT_SOURCE  -D_BSD_SOURCE#-c `sdl-config --cflags`
-LDFLAGS=  -lSDL2 -lSDL2_ttf 
+CC=nvcc
+#CFLAGS= -`sdl2-config --cflags --libs` -lm #-c `sdl-config --cflags`
+#LDFLAGS=  -lSDL2 -lSDL2_ttf 
 
-SRC=$(wildcard src/*.c)
-OBJ=$(patsubst src/%.c, src/%.o, $(SRC))
-BIN=automata
+#SRC=$(wildcard src/*.c, src/*.cu)
+#OBJ=$(patsubst src/%.c, src/%.o, $(SRC))
+#BIN=automata
 
-all: $(BIN)
+all: 
+	$(CC) src/main.cu src/render.cu src/util.c 
 
-$(BIN): $(OBJ)
-	$(CC) $(CFLAGS) $(OBJ) -o $@ $(LDFLAGS)
-
-src/%.o: src/%.c
-	$(CC) $(CFLAGS) -c $< -o $@ $(LDFLAGS)
 clean:
 	$(RM) -r $(BIN) $(OBJ)
+
+
+
+
