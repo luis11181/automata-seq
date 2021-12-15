@@ -15,8 +15,9 @@ CC=nvcc
 
 
 #nvcc -O3 simpleMultiGPU.cu -o simpleMultiGPU
+#
 all: 
-	$(CC) -Xcompiler -sdl2-config  src/main.cu src/render.cu src/util.c  
+  nvcc -forward-unknown-to-host-compiler `sdl2-config --cflags --libs`  src/main.cu src/render.cu src/util.cu -o automatacu
 
 clean:
 	$(RM) -r $(BIN) $(OBJ)

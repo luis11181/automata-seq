@@ -13,9 +13,9 @@ enum TIMER {
 };
 
 //util function to do simple things
-int max(int a, int b);
+//int max(int a, int b);
 
-int min(int a, int b);
+//int min(int a, int b);
 
 void renderText(SDL_Renderer *renderer, TTF_Font *font, int r, int g, int b, char stringText[], int x, int y);
 
