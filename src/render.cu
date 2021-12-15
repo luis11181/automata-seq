@@ -499,18 +499,18 @@ void world_sand_sim(SDL_Renderer *renderer, state_t *state)
   //*/////////////////////////////////////
   //CUDA CODE
   
-  // int c;
-  // int *dev_c;
-  // cudaMalloc( (void**)&dev_c, sizeof(int) );
-  // add<<<1,1>>>( 2, 7, dev_c );
+  int c;
+  int *dev_c;
+  cudaMalloc( (void**)&dev_c, sizeof(int) );
+  add<<<1,1>>>( 2, 7, dev_c );
 
-  // cudaMemcpy( &c,
-  // dev_c,
-  // sizeof(int),
-  // cudaMemcpyDeviceToHost );
+  cudaMemcpy( &c,
+  dev_c,
+  sizeof(int),
+  cudaMemcpyDeviceToHost );
 
-  // printf( "2 + 7 = %d\n", c );
-  // cudaFree( dev_c );
+  printf( "2 + 7 = %d\n", c );
+  cudaFree( dev_c );
 
   //*/////////////////////////////////////
 
