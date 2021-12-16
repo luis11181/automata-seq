@@ -5,6 +5,9 @@
 #include <iostream>
 #include <stdlib.h>
 #include <sys/time.h>
+#include <ctime>
+#include "cuda_runtime.h"
+#include "common/book.h"
 
 #include "logic.h"
 #include "render.h"
@@ -518,18 +521,17 @@ void world_sand_sim(SDL_Renderer *renderer, state_t *state)
   int offset = x + y * blockDim.x * gridDim.x;
   
   
-  int c;
-  int *dev_c;
-  cudaMalloc( (void**)&dev_c, sizeof(int) );
-  add<<<1,1>>>( 2, 7, dev_c );
+    int c;
+    int *dev_c;
+    HANDLE_ERROR( cudaMalloc( (void**)&dev_c, sizeof(int) ) );
 
-  cudaMemcpy( &c,
-  dev_c,
-  sizeof(int),
-  cudaMemcpyDeviceToHost );
+    add<<<1,1>>>( 2, 7, dev_c );
 
-  printf( "2 + 7 = %d\n", c );
-  cudaFree( dev_c );
+    HANDLE_ERROR( cudaMemcpy( &c, dev_c, sizeof(int),
+                              cudaMemcpyDeviceToHost ) );
+    printf( "2 + 7 = %d\n", c );
+    HANDLE_ERROR( cudaFree( dev_c ) );
+
 
   //*/////////////////////////////////////
 

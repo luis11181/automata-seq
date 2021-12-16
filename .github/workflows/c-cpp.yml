@@ -17,13 +17,25 @@ jobs:
 
       - name: update
         run: sudo apt-get update
+      - name: get basics
+        run: sudo apt install build-essential
       - name: install sdl2
         run: sudo apt-get install libsdl2-dev
       - name: install ttf
         run: sudo apt-get install libsdl2-ttf-dev
       - name: install fonts
         run: sudo apt-get install ttf-ubuntu-font-family
+      - run: wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/cuda-ubuntu2004.pin
+      - run: sudo mv cuda-ubuntu2004.pin /etc/apt/preferences.d/cuda-repository-pin-600
+      - run: wget https://developer.download.nvidia.com/compute/cuda/11.5.1/local_installers/cuda-repo-ubuntu2004-11-5-local_11.5.1-495.29.05-1_amd64.deb
+      - run: sudo dpkg -i cuda-repo-ubuntu2004-11-5-local_11.5.1-495.29.05-1_amd64.deb
+      - run: sudo apt-key add /var/cuda-repo-ubuntu2004-11-5-local/7fa2af80.pub
+      - run: sudo apt-get update
+      - run: sudo apt-get -y install cuda
+      - run: export PATH=/usr/local/cuda-11.5/bin${PATH:+:${PATH}}
       - name: make clean
         run: make clean
       - name: make all
         run: make all
+
+        run: nvidia-smi
