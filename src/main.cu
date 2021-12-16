@@ -8,6 +8,7 @@
 #include <SDL2/SDL.h>
 //#include "SDL_ttf.h"
 #include "/usr/include/SDL2/SDL_ttf.h"
+#include "cuda_runtime.h"
 
 #include "util.h"
 #include "logic.h"

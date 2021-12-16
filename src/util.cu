@@ -3,6 +3,7 @@
 //#include "SDL_ttf.h"
 #include "/usr/include/SDL2/SDL_ttf.h"
 #include "util.h"
+#include "cuda_runtime.h"
 
 //Timers
 struct timeval tval_start, tval_render_grid, tval_sandsim, tval_threads_1, tval_threads_2, tval_total_1, tval_total_2;;
