@@ -498,6 +498,25 @@ void world_sand_sim(SDL_Renderer *renderer, state_t *state)
 
   //*/////////////////////////////////////
   //CUDA CODE
+
+  int grid_dim;
+  int block_dim;
+
+  if (N < 1024) {
+      grid_dim = N;
+      block_dim = N;
+  }
+  else {
+      grid_dim = 1024;
+      block_dim = 1024;
+  }
+
+
+    // map from threadIdx/BlockIdx to pixel position
+  int x = threadIdx.x + blockIdx.x * blockDim.x;
+  int y = threadIdx.y + blockIdx.y * blockDim.y;
+  int offset = x + y * blockDim.x * gridDim.x;
+  
   
   int c;
   int *dev_c;
