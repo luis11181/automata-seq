@@ -489,19 +489,20 @@ double avg_FPS_sandsim = 0;
 
 //* /////////////////////////////////
 //* cuda function
-__global__ void cudaFunction(int *d_matrix, int a, int b, ) {
+__global__ void cudaFunction(int *d_Matrix, int *d_Values, int dim) {
 
   // map from threadIdx/BlockIdx to pixel position
-  int x = threadIdx.x + blockIdx.x * blockDim.x;
-  int y = threadIdx.y + blockIdx.y * blockDim.y;
-  int offset = x + y * blockDim.x * gridDim.x;
+  int x = threadIdx.x + blockIdx.x * blockDim.x;// thread column
+  int y = threadIdx.y + blockIdx.y * blockDim.y;//thread row
 
-  *d_matrix = {{1}};
+  *d_Matrix = {{1}};
 
-  // print the offset integer
-  printf("%d\n", offset);
-
- //y 
+  if (x<dim && y<dim) {
+    int offset = x + y * blockDim.x * gridDim.x;
+    // write array contINING all the offset variable values
+    *d_Values[offset] = offset;
+  }
+  
   
 }
 //* /////////////////////////////////
@@ -528,21 +529,26 @@ void world_sand_sim(SDL_Renderer *renderer, state_t *state)
 
   // malloc device memory
   int Matrix[N][N]={{0}};
+  int Values[N*N]={{0}};
   int *d_Matrix;
+  int *d_Values;
+
   HANDLE_ERROR( cudaMalloc((void **)&d_Matrix, N * N * sizeof(int)));
+  HANDLE_ERROR( cudaMalloc((void **)&d_Values, N * N * sizeof(int)));
 
   // transfer data from host to device
-  HANDLE_ERROR( cudaMemcpy(d_Matrix, &Matrix, cudaMemcpyHostToDevice));
+  //HANDLE_ERROR( cudaMemcpy(d_Matrix, &Matrix, cudaMemcpyHostToDevice));
 
   // invoke the kernel
-  cudaFunction<<< grid_dim, block_dim >>>(d_Matrix, 7, 5);
+  cudaFunction<<< grid_dim, block_dim >>>(d_Matrix, d_Values, N);
   cudaDeviceSynchronize();
 
 
   HANDLE_ERROR( cudaMemcpy( &Matrix, d_Matrix, N * N * sizeof(int) , cudaMemcpyDeviceToHost ) );
-
+  HANDLE_ERROR( cudaMemcpy( &Values, d_Values, N * N * sizeof(int) , cudaMemcpyDeviceToHost ) );
 
   printf( Matrix );
+  printf( Values );
 
   // free host and devide memory
   HANDLE_ERROR( cudaFree(d_MatA));
