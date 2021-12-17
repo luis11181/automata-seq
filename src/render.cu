@@ -496,6 +496,7 @@ __global__ void cudaFunction(int *d_matrix, int a, int b, ) {
   int y = threadIdx.y + blockIdx.y * blockDim.y;
   int offset = x + y * blockDim.x * gridDim.x;
 
+  *c = {{1}};
   
 }
 //* /////////////////////////////////
@@ -521,7 +522,7 @@ void world_sand_sim(SDL_Renderer *renderer, state_t *state)
   }
 
   // malloc device memory
-  int Matrix[N][N];
+  int Matrix[N][N]={{0}};
   int *d_Matrix;
   HANDLE_ERROR( cudaMalloc((void **)&d_Matrix, N * N * sizeof(int)));
 
