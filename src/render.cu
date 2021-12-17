@@ -496,7 +496,12 @@ __global__ void cudaFunction(int *d_matrix, int a, int b, ) {
   int y = threadIdx.y + blockIdx.y * blockDim.y;
   int offset = x + y * blockDim.x * gridDim.x;
 
-  *c = {{1}};
+  *d_matrix = {{1}};
+
+  // print the offset integer
+  printf("%d\n", offset);
+
+ //y 
   
 }
 //* /////////////////////////////////
