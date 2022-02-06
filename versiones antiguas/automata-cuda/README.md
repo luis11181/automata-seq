@@ -9,8 +9,12 @@ Implementation of different celullar automata with SDL2 in C. Developed and test
 ## Installation
 * `git clone https://github.com/joaquin-rossi/celullar-automata`
 * `cd celullar-automata`
-* `make`
+* nvcc \`sdl2-config --cflags --libs\`  src/main.cu src/render.cu src/util.cu -o automata-cuda -lSDL2 -lSDL2_ttf
 * `./bin/main`
+
+## Command
+
+nvcc `sdl2-config --cflags --libs`  src/main.cu src/render.cu src/util.cu -o automata-cuda -lSDL2 -lSDL2_ttf
 
 ## Available automata
 * [Langton's ant](https://en.wikipedia.org/wiki/Langton%27s_ant)

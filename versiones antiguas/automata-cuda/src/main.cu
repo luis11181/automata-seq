@@ -1,14 +1,18 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <iostream>
 #include <sys/time.h>
 #include <unistd.h>
 #include <stdbool.h> 
 #include <SDL2/SDL.h>
 //#include "SDL_ttf.h"
 #include "/usr/include/SDL2/SDL_ttf.h"
-#include "cuda_runtime.h"
+//CUDA imports
+#include <time.h>
+#include <cuda_runtime.h>
+#include <curand_kernel.h>
+#include <curand.h>
+
 
 #include "util.h"
 #include "logic.h"
@@ -30,7 +34,6 @@ void print_usage()
 }
 
 
-
 int main(int argc, char **argv)
 {
     int automata;//! automata defines the simulation we are running (see logic.h)
@@ -39,6 +42,8 @@ int main(int argc, char **argv)
 
     //Funciones de util.c
     startUtilTimers();
+    time_t t;
+    srand((unsigned int) time(&t));
     //initUtilFonts();
 
     if (argc < 2) {
@@ -112,38 +117,44 @@ int main(int argc, char **argv)
             state.ant.x = N / 2;
             state.ant.y = N / 2;
             state.ant.dir = LEFT;
-            break;}
-
+            break;
+        }
         case GAME_OF_LIFE:{
             for (int x = 0; x < N; x++)
-                for (int y = 0; y < N; y++)
-                    state.board[x][y] = BLACK;
+                for (int y = 0; y < N; y++){
+                    int idx = (y * N) + x;
+                    state.board[idx] = BLACK;
+                }
 
             // GLIDER
-            state.board[N / 2][N / 2] = WHITE;
-            state.board[N / 2 + 1][N / 2] = WHITE;
-            state.board[N / 2 + 2][N / 2] = WHITE;
-            state.board[N / 2 + 1][N / 2 - 2] = WHITE;
-            state.board[N / 2 + 2][N / 2 - 1] = WHITE;
-            break;}
-
+            int idx = ((N / 2) * N) + (N / 2);
+            state.board[idx] = WHITE;
+            idx = (((N / 2) + 1) * N) + (N / 2);
+            state.board[idx] = WHITE;
+            idx = (((N / 2) + 2) * N) + (N / 2);
+            state.board[idx] = WHITE;
+            idx = (((N / 2) + 1) * N) + ((N / 2) - 2);
+            state.board[idx] = WHITE;
+            idx = (((N / 2) + 2) * N) + ((N / 2) - 1);
+            state.board[idx] = WHITE;
+            break;
+        }
          //* initial state of the world
         case FALLING_SAND_SIM:{
             for (int x = 0; x < N; x++){
                 for (int y = 0; y < N; y++){
-                    
-                    state.board[x][y] = AIR;
+                    int idx = (y * N) + x;
+                    state.board[idx] = AIR;
                     
                     //make rock is the sum is small
                     if (y > (N-(N/2.1))) { //make the sea
-                        state.board[x][y] = WATER;
-                    } else if (y > (N-(N/1.05))) { //make sand
-                        state.board[x][y] = SAND;
+                        state.board[idx] = WATER;
+                    } else if (y > min((N-(N/1.05)), (double)500)) { //make sand
+                        state.board[idx] = SAND;
                     } 
                     
-                    if(y < 40){
-                        state.board[x][y] = AIR;
-                    }
+                    if(y < 40) state.board[idx] = AIR;
+                    if(y > 500) state.board[idx] = WATER;
 
                     /*
                     if (y < (N-(N*0.75))&& y > (N-(N*0.8)) && x < (N-(N*0.25)) && x > (N-(N*0.3) )) { //make sand
@@ -161,14 +172,16 @@ int main(int argc, char **argv)
                 //printf("\n");
             }
             */
-          break;}
-
+          break;
+        }
         default:{
             for (int x = 0; x < N; x++)
-                for (int y = 0; y < N; y++)
-                    state.board[x][y] = AIR;
-
-            break;}
+                for (int y = 0; y < N; y++){
+                    int idx = (y * N) + x;
+                    state.board[idx] = AIR;
+                }
+            break;
+        }
     }
 
 
@@ -180,7 +193,33 @@ int main(int argc, char **argv)
     int brushSize = 2;
 
     char dest[200]= "Fire";
-       
+
+    //============= CUDA INITIALIZATION ===============//
+
+    // set up data size of board
+    int nElem = N * N;
+    u_int8_t *d_board;
+    bool *d_has_moved;
+    bool has_moved[N*N] = {false};
+        
+    //Calcular los tamaños de los arreglos
+    size_t nBytesStates = nElem * sizeof(curandState);
+    size_t nBytesBoards = nElem * sizeof(u_int8_t);
+    size_t nBytesBool = nElem * sizeof(bool);
+    // malloc device global memory
+    cudaMalloc((bool **)&d_has_moved, nBytesBool);
+    cudaMalloc((u_int8_t **)&d_board, nBytesBoards);
+    //Random functions in device
+    curandState *d_random;
+    //Seed to send to device
+    unsigned int seed = (unsigned int) time(&t);
+    // malloc random numbers in device
+    cudaMalloc((void**)&d_random, nBytesStates);
+    // transfer initial data from host to device
+    cudaMemcpy(d_board, state.board, nBytesBoards, cudaMemcpyHostToDevice);
+    cudaMemcpy(d_has_moved, has_moved, nBytesBool, cudaMemcpyHostToDevice);
+
+    //=================================================//
 
     while (state.mode != QUIT_MODE) {
       //! while loop to search for events and handle them doing an action dependong on the game
@@ -189,8 +228,8 @@ int main(int argc, char **argv)
                 
                 case SDL_QUIT:{
                     state.mode = QUIT_MODE;
-                    break;}
-
+                    break;
+                }
                 case SDL_MOUSEBUTTONDOWN:{
 
                   draw= true;
@@ -203,13 +242,14 @@ int main(int argc, char **argv)
                 
                     int x = event.button.x / CELL_WIDTH;
                     int y = event.button.y / CELL_HEIGHT;
-                    
+                    int idx = (y * N) + x;
 
                     // TOGGLES BETWEEN EACH ELEMENT TYPE WITH EACH CLICK
                     switch (automata) {
                         case GAME_OF_LIFE:{
-                            state.board[x][y] = (state.board[x][y] + 1) % 2;
-                            break;}
+                            state.board[idx] = (state.board[idx] + 1) % 2;
+                            break;
+                        }
                         // USE MODULE 9 TO ONLY GET A NUMBER BETWEEN 0 AND 9 THAT ARE HE NUMBER OF COLORS
                         case FALLING_SAND_SIM:{
                         // alter teh state of pixel with each click
@@ -222,13 +262,16 @@ int main(int argc, char **argv)
                            
                              for(int y = max(0,mousey-brushSize); y < min(N-1, mousey+brushSize); ++y){
                               for(int x = max(0,mousex-brushSize); x < min(N-1, mousex+brushSize); ++x){
-                                state.board[x][y] = drawing_element;
+                                int idx = (y * N) + x;
+                                state.board[idx] = drawing_element;
                               }
                            }}
                             
-                        break;}
+                        break;
+                        }
                     }
-                  break;}
+                  break;
+                }
 
                 // if the click is pressed and there is movement the mouse will draw any picture
                 case SDL_MOUSEMOTION:{
@@ -242,22 +285,23 @@ int main(int argc, char **argv)
                         
                         for(int y = max(0,mousey-brushSize); y < min(N-1, mousey+brushSize); ++y){
                               for(int x = max(0,mousex-brushSize); x < min(N-1, mousex+brushSize); ++x){
-                                 state.board[x][y] = drawing_element;
+                                 int idx = (y * N) + x;
+                                 state.board[idx] = drawing_element;
                               }
                             }
 
                     }
-                    break;}
-
+                    break;
+                }
                 case SDL_MOUSEBUTTONUP:{
                     draw=false;
-                    break;}
-               
+                    break;
+                }
                 //event if left is used
                 case SDLK_LEFT:{
                         //do something with left arrow
-                    break;}
-
+                    break;
+                }
                 case SDL_KEYDOWN:{
                     if (event.key.keysym.sym == ' ') {
                         state.mode = RUNNING_MODE + PAUSED_MODE - state.mode;
@@ -266,8 +310,10 @@ int main(int argc, char **argv)
                     else if (event.key.keysym.sym == 'm' || event.key.keysym.sym == 'M') {
                       int random = rand() % 19;
                         for (int x = N/20*random; x < N/20*random + N/20; x++)
-                            for (int y = 0; y < N/20; y++)
-                                state.board[x][y] = (rand() % 2) ? ROCK : FIRE;
+                            for (int y = 0; y < N/20; y++){
+                                int idx = (y * N) + x;
+                                state.board[idx] = (rand() % 2) ? ROCK : FIRE;
+                            }
                     }           
                     else if (event.key.keysym.sym == 'f' || event.key.keysym.sym == 'F') {
                       drawing_element = FIRE;
@@ -325,7 +371,8 @@ int main(int argc, char **argv)
                       }
                        }
                       
-                break;}
+                break;
+                }
             }
         }
 
@@ -341,15 +388,16 @@ int main(int argc, char **argv)
         switch (automata) {
             case LANGTONS_ANT:{
                 langtons_ant(renderer, &state);
-                break;}
-
+                break;
+            }
             case GAME_OF_LIFE:{
                 game_of_life(renderer, &state);
-                break;}
-
+                break;
+            }
             case FALLING_SAND_SIM:{
-                world_sand_sim(renderer, &state);
-                break;}
+                world_sand_simOnGPU(renderer, &state, d_board, d_has_moved, d_random, seed);
+                break;
+            }
         }
 
         //Función para imprimir un texto indicando la fuente, posición y color de la fuente
@@ -366,6 +414,11 @@ int main(int argc, char **argv)
     TTF_Quit();
     // you could SDL_Quit(); here...or not.
     SDL_Quit();
+
+    // free device global memory
+    cudaFree(d_board);
+    cudaFree(d_random);
+    cudaFree(d_has_moved);
 
     return EXIT_SUCCESS;
 }

@@ -3,7 +3,6 @@
 //#include "SDL_ttf.h"
 #include "/usr/include/SDL2/SDL_ttf.h"
 #include "util.h"
-#include "cuda_runtime.h"
 
 //Timers
 struct timeval tval_start, tval_render_grid, tval_sandsim, tval_threads_1, tval_threads_2, tval_total_1, tval_total_2;;
@@ -11,12 +10,27 @@ struct timeval tval_start, tval_render_grid, tval_sandsim, tval_threads_1, tval_
 //Fuentes
 TTF_Font *cfont;
 
+/*int max(int x,int k)
+{
+	
+	if(x>k)
+    return x;
+  else
+    return k;
+}
 
-
+int min(int x,int k)
+{
+	
+	if(x<k)
+    return x;
+  else
+    return k;
+}*/
 
 //Para imprimir un texto con opción de escoger la fuente y la posicion
 void renderText(SDL_Renderer *renderer, TTF_Font *font, int r, int g, int b, char stringText[], int x, int y){
-        SDL_Color font_color = { .r = r,.g = g,.b = b };
+        SDL_Color font_color = { .r = r, .g = g, .b = b };
         //render text on screen with SDL with the element that is being drawn 
         SDL_Surface *surfaceMessage = TTF_RenderText_Solid(font, stringText, font_color); //
         SDL_Texture *Message = SDL_CreateTextureFromSurface(renderer, surfaceMessage); // now you can convert it into a texture
