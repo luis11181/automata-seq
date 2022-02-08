@@ -1,5 +1,5 @@
-# Celullar Automata
-Implementation of different celullar automata with SDL2 in C. Developed and tested on Linux, I have no idea how to (if it can be done at all) run it on other operating systems.
+# parallel sand simulator
+Implementation of a material simulator in C, user can add material and see how they interact over time.
 
 ## Dependencies
 * GCC
