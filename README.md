@@ -27,8 +27,10 @@ run the makefile to compile
 
 # OpenMp parallel version
 
-optimiced parallel version with OpenMp.
-<img width="374" alt="openMP" src="https://user-images.githubusercontent.com/80784724/153083403-7c9871f5-2bea-4562-87e4-cfaf6ddd11f0.png">
+optimized parallel version with OpenMp.
+
+<img width="374" alt="sandsim2openmp" src="https://user-images.githubusercontent.com/80784724/153085864-5ebfd712-e215-4387-9a31-8a63dcef4dd8.png">
+
 
 # Cuda paralell version
 
