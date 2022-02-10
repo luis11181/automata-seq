@@ -21,7 +21,7 @@ Top menu with the frames per second
 
 ## Sequential version
 
-Sequential version is based on a found SDL implementation of a cellular automata; Then the implemented logic for the sandsimulation, the element rules, rendering and parallelism from scratch
+Sequential version is based on a found SDL implementation of a cellular automata https://github.com/joaquin-rossi/automata; Then the implemented logic for the sandsimulation, the element rules, rendering and parallelism from scratch
 
 run the makefile to compile
 
