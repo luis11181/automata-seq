@@ -1,4 +1,4 @@
-# parallel sand simulator
+# parallel sand/substances simulator
 Implementation of a material simulator in C, user can add material and see how they interact over time.
 
 ## Dependencies
