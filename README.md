@@ -13,6 +13,8 @@ Implementation of a material simulator in C, user can add material and see how t
 ## Demo
 Graphical interface of the simulation
 
+There are 6 elements with unique properties, these elements can be toggles and placed with the mouse.
+
 <img width="364" alt="sandsim" src="https://user-images.githubusercontent.com/80784724/153083285-99e0e162-d3ab-4130-b7ca-eee35bf88c18.png">
 
 Top menu with the frames per second 
@@ -48,7 +50,7 @@ mpirun -np 8 -host nodo0,nodo1,nodo2,nodo3,nodo4,nodo5,nodo6,nodo7 ./sandsim
 ## Extra info
 
 * Press spacebar to toggle between paused and unpaused.
-* Press the mpuse to draw with the elements
+* Press the mouse to draw with the elements
 * Press the keys to change the elemnts.
 F= fire, R= rock, A= air, W= water, S= sand, H= smoke/humo...
 
